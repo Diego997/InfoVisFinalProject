@@ -1,0 +1,92 @@
+[
+  {
+    "x": 100,
+    "y": 10,
+    "Mario": "Mario1"
+  },
+  {
+    "x": 90,
+    "y": 20,
+    "Mario": "Mario2"
+  },
+  {
+    "x": 80,
+    "y": 30,
+    "Mario": "Mario3"
+  },
+  {
+    "x": 70,
+    "y": 40,
+    "Mario": "Mario4"
+  },
+  {
+    "x": 60,
+    "y": 50,
+    "Mario": "Mario5"
+  },
+  {
+    "x": 50,
+    "y": 60,
+    "Mario": "Mario6"
+  },
+  {
+    "x": 40,
+    "y": 70,
+    "Mario": "Mario7"
+  },
+  {
+    "x": 30,
+    "y": 80,
+    "Mario": "Mario8"
+  },
+  {
+    "x": 20,
+    "y": 90,
+    "Mario": "Mario9"
+  },
+  {
+    "x": 10,
+    "y": 100,
+    "Mario": "Mario10"
+  },
+  {
+    "x": 0,
+    "y": 30,
+    "Mario": "Mario11"
+  },
+  {
+    "x": 10,
+    "y": 40,
+    "Mario": "Mario12"
+  },
+  {
+    "x": 20,
+    "y": 50,
+    "Mario": "Mario13"
+  },
+  {
+    "x": 30,
+    "y": 60,
+    "Mario": "Mario14"
+  },
+  {
+    "x": 30,
+    "y": 70,
+    "Mario": "Mario15"
+  },
+  {
+    "x": 3000,
+    "y": 70,
+    "Mario": "Mario16"
+  },
+  {
+    "x": 310,
+    "y": 70,
+    "Mario": "Mario17"
+  },
+  {
+    "x": 30,
+    "y": 40,
+    "Mario": "Mario18"
+  }
+]
