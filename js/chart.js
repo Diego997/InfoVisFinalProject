@@ -1,7 +1,7 @@
 const updateTime = 800; // time for transitions
 const margin = {top: 20, right: 20, bottom: 30, left: 40};
-const width = 1800 - margin.left - margin.right;
-const height = 600 - margin.top - margin.bottom;
+const width = 1200 - margin.left - margin.right;
+const height = 350 - margin.top - margin.bottom;
 const ldmargin = 100;
 const nBars=10;
 const posFirstBar=(width/nBars/10)+2;
@@ -67,7 +67,7 @@ function drawAxes1(){
 
     svg1.append("g")
         .attr("class", "legend")
-        .attr("transform", "translate(1690,0)")
+        .attr("transform", "translate(1100,0)")
         .call(legendAxis);
 }
 
@@ -76,9 +76,9 @@ function drawLegend1(){
         .attr("id","linear-gradient");
     linearGradient
         .attr("x1", "0%")
-        .attr("y1", "0%")
+        .attr("y1", "100%")
         .attr("x2", "0%")
-        .attr("y2", "100%");
+        .attr("y2", "0%");
 
     linearGradient.selectAll("stop")
         .data([
@@ -97,9 +97,9 @@ function drawLegend1(){
         .attr("stop-color", function(d) { return d.color; });
 
     svg1.append("rect")
-        .attr("width", 40)
+        .attr("width", 30)
         .attr("height", height)
-        .attr("x", 1650)
+        .attr("x", 1070)
         .attr("y", 0)
         .style("fill", "url(#linear-gradient)")
 }
@@ -117,7 +117,7 @@ function updateDrawing1(){
         .attr("height", function(d) { return height - yScale(d[1]); })
         .attr("fill", function(d) { return barColors(d[1]);})
         .attr("stroke-width", 2)
-        .attr("stroke", "black")
+        .attr("stroke", "white")
 
 
     bars.transition().duration(updateTime)
@@ -128,7 +128,7 @@ function updateDrawing1(){
         .attr("height", function(d) { return height- yScale(d[1]); })
         .attr("fill", function(d) { return barColors(d[1]);})
         .attr("stroke-width", 2)
-        .attr("stroke", "black")
+        .attr("stroke", "white")
 
 }
 
@@ -155,7 +155,7 @@ function drawAxes2(){
 
     svg2.append("g")
         .attr("class", "legend")
-        .attr("transform", "translate(1690,0)")
+        .attr("transform", "translate(1100,0)")
         .call(legendAxis);
 }
 
@@ -167,34 +167,11 @@ function updateAxes2(){
 }
 
 function drawLegend2(){
-    var linearGradient = svg2.append("linearGradient")
-        .attr("id","linear-gradient");
-    linearGradient
-        .attr("x1", "0%")
-        .attr("y1", "0%")
-        .attr("x2", "100%")
-        .attr("y2", "0%");
-
-    linearGradient.selectAll("stop")
-        .data([
-            {offset: "0%", color: "#2c7bb6"},
-            {offset: "12.5%", color: "#00a6ca"},
-            {offset: "25%", color: "#00ccbc"},
-            {offset: "37.5%", color: "#90eb9d"},
-            {offset: "50%", color: "#ffff8c"},
-            {offset: "62.5%", color: "#f9d057"},
-            {offset: "75%", color: "#f29e2e"},
-            {offset: "87.5%", color: "#e76818"},
-            {offset: "100%", color: "#d7191c"}
-        ])
-        .enter().append("stop")
-        .attr("offset", function(d) { return d.offset; })
-        .attr("stop-color", function(d) { return d.color; });
 
     svg2.append("rect")
-        .attr("width", 40)
+        .attr("width", 30)
         .attr("height", height)
-        .attr("x", 1650)
+        .attr("x", 1070)
         .attr("y", 0)
         .style("fill", "url(#linear-gradient)")
 }
@@ -207,7 +184,7 @@ function updateDrawing2(){
     bars.enter().append("rect")
         .attr("class", "bar")
         .attr("stroke-width", 2)
-        .attr("stroke", "black")
+        .attr("stroke", "white")
         .attr("x", function(d) { return xScale(d[2]); })
         .attr("y", function(d) { return yScale(d[1]); })
         .attr("width", xScale.bandwidth())
@@ -218,7 +195,7 @@ function updateDrawing2(){
     bars.transition().duration(updateTime)
         .attr("class", "bar")
         .attr("stroke-width", 2)
-        .attr("stroke", "black")
+        .attr("stroke", "white")
         .attr("x", function(d) { return xScale(d[2]); })
         .attr("y", function(d) { return yScale(d[1]); })
         .attr("width", xScale.bandwidth())
