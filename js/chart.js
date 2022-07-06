@@ -217,6 +217,38 @@ function handleClick(){
     redraw()
 }
 
+
+var datasetSteam = [];
+
+var publisherToDeveloper = new Map();
+
+console.log(datasetSteam);
+
+function mappatutto() {
+    for (elem of datasetSteam) {
+        if (publisherToDeveloper.has(elem[3])) {
+            
+            publisherToDeveloper.set(elem[3], publisherToDeveloper.get(elem[3]).push(elem[2]));
+        } else
+            list = []
+            publisherToDeveloper.set(elem[3], list.push(elem[2]));
+    }
+}
+
+console.log(publisherToDeveloper);
+
+d3.json("data/completeDataset.json")
+    .then(function(data) {
+        data.forEach(row => {
+            arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
+            datasetSteam.push(arr);
+        });
+        mappatutto();
+    })
+    .catch(function(error) {
+        console.log(error); // Some error handling here
+    });
+
 d3.json("data/dataset.json")
 	.then(function(data) {
         data.forEach(row => {
