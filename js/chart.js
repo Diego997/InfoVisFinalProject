@@ -63,12 +63,18 @@ function drawAxes1(){
     svg1.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
+        .call(xAxis)
+        .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-65)");
 
     svg1.append("g")
         .attr("class", "legend")
         .attr("transform", "translate(1100,0)")
         .call(legendAxis);
+
 }
 
 function drawLegend1(){
@@ -222,20 +228,71 @@ var datasetSteam = [];
 
 var publisherToDeveloper = new Map();
 
+var publisherYearToDeveloper = new Map();
+
+var publisherToGenre = new Map();
+
+var publisherYearToGenre = new Map();
+
 console.log(datasetSteam);
 
-function mappatutto() {
+function mapPublisherToDeveloper() {
     for (elem of datasetSteam) {
         if (publisherToDeveloper.has(elem[3])) {
-            
-            publisherToDeveloper.set(elem[3], publisherToDeveloper.get(elem[3]).push(elem[2]));
+            arr = publisherToDeveloper.get(elem[3])
+            arr.push(elem[2])
+            publisherToDeveloper.set(elem[3], arr);
         } else
-            list = []
-            publisherToDeveloper.set(elem[3], list.push(elem[2]));
+            arr=[elem[2]];
+            var uniqueArr = [...new Set(arr)]
+            publisherToDeveloper.set(elem[3],uniqueArr);
+    }
+}
+
+function mapPublisherYearToDeveloper() {
+    for (elem of datasetSteam) {
+        if (publisherYearToDeveloper.has([elem[3],elem[1]])) {
+            arr = publisherYearToDeveloper.get([elem[3],elem[1]])
+            arr.push(elem[2])
+            publisherYearToDeveloper.set([elem[3],elem[1]], arr);
+        } else
+            arr=[elem[2]];
+        var uniqueArr = [...new Set(arr)]
+        publisherYearToDeveloper.set([elem[3],elem[1]],uniqueArr);
+    }
+}
+
+function mapPublisherToGenre() {
+    for (elem of datasetSteam) {
+        if (publisherToGenre.has(elem[3])) {
+            arr = publisherToGenre.get(elem[3])
+            arr.push(elem[4])
+            publisherToGenre.set(elem[3], arr);
+        } else
+            arr=[elem[2]];
+        var uniqueArr = [...new Set(arr)]
+        publisherToGenre.set(elem[3],uniqueArr);
+    }
+}
+
+function mapPublisherYearToGenre() {
+    for (elem of datasetSteam) {
+        if (publisherYearToGenre.has([elem[3],elem[1]])) {
+            arr = publisherYearToGenre.get([elem[3],elem[1]])
+            arr.push(elem[4])
+            publisherYearToGenre.set([elem[3],elem[1]], arr);
+        } else
+            arr=[elem[2]];
+        var uniqueArr = [...new Set(arr)]
+        publisherYearToGenre.set([elem[3],elem[1]],uniqueArr);
     }
 }
 
 console.log(publisherToDeveloper);
+console.log(publisherYearToDeveloper);
+console.log(publisherToGenre);
+console.log(publisherYearToGenre);
+
 
 d3.json("data/completeDataset.json")
     .then(function(data) {
@@ -243,7 +300,10 @@ d3.json("data/completeDataset.json")
             arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
             datasetSteam.push(arr);
         });
-        mappatutto();
+        mapPublisherToDeveloper();
+        mapPublisherYearToDeveloper();
+        mapPublisherToGenre();
+        mapPublisherYearToGenre();
     })
     .catch(function(error) {
         console.log(error); // Some error handling here
