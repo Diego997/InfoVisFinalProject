@@ -1,16 +1,13 @@
 const updateTime = 800; // time for transitions
-const margin = {top: 20, right: 20, bottom: 30, left: 40};
-const width = 1200 - margin.left - margin.right;
-const height = 350 - margin.top - margin.bottom;
-const ldmargin = 100;
-const nBars=10;
-const posFirstBar=(width/nBars/10)+2;
-const posOtherBars=(width-2)/nBars;
-const posLegend = {from: Math.trunc((posOtherBars*2)+(posFirstBar)+(posOtherBars/2))-5,
-    to: Math.trunc((posOtherBars*7)+(posFirstBar)+(posOtherBars/2))-9};
+const margin = {top: 50, right: 20, bottom: 10, left: 40};
+const text = 50;
+const widthLegend = 100;
+const width = 1350 - margin.left - margin.right - widthLegend;
+const height = 450 - margin.top - margin.bottom - text;
+const ldmargin = 150;
 
 var dataSet = [];
-var xScale = d3.scaleBand().rangeRound([2, width-ldmargin]).padding(.1);
+var xScale = d3.scaleBand().rangeRound([2, width]).padding(.1);
 var yScale = d3.scaleLinear().range([height, 0]);
 var legendScale = d3.scaleLinear().range([height, 0]);
 var barColors = d3.scaleLinear().range(["#2c7bb6", "#00a6ca","#00ccbc","#90eb9d","#ffff8c",
@@ -20,16 +17,18 @@ var xAxis = d3.axisBottom(xScale)
 var legendAxis = d3.axisRight(legendScale).ticks(10);// Left = ticks on the left
 
 var svg1 = d3.select("#div1").append("svg")
-    .attr("width", width + margin.left + margin.right)     // i.e., 800 again 
-    .attr("height", height + margin.top + margin.bottom)// i.e., 300 again
+    .attr("width", width + margin.left + margin.right + widthLegend)     // i.e., 800 again
+    .attr("height", height + margin.top + margin.bottom + text)// i.e., 300 again
     .append("g")                                           // g is a group
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var svg2 = d3.select("#div2").append("svg")
-    .attr("width", width + margin.left + margin.right)     // i.e., 800 again
-    .attr("height", height + margin.top + margin.bottom)   // i.e., 300 again
+/*var svg2 = d3.select("#div2").append("svg")
+    .attr("width", width + margin.left + margin.right + widthLegend)     // i.e., 800 again
+    .attr("height", height + margin.top + margin.bottom + text)   // i.e., 300 again
     .append("g")                                           // g is a group
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+*/
+
 
 function updateXScaleDomain() {
     xScale.domain(dataSet.map(function(d) { return d[2]}));
@@ -72,9 +71,16 @@ function drawAxes1(){
 
     svg1.append("g")
         .attr("class", "legend")
-        .attr("transform", "translate(1100,0)")
+        .attr("transform", "translate(" + (width + margin.left) + ",0)")
         .call(legendAxis);
 
+// Y axis label:
+    svg1.append("text")
+        .attr("text-anchor", "end")
+        .attr("y", -25)
+        .attr("x", margin.left+100)
+        .attr("fill","white")
+        .text("% Positive Reviews")
 }
 
 function drawLegend1(){
@@ -105,7 +111,7 @@ function drawLegend1(){
     svg1.append("rect")
         .attr("width", 30)
         .attr("height", height)
-        .attr("x", 1070)
+        .attr("x", width + 10)
         .attr("y", 0)
         .style("fill", "url(#linear-gradient)")
 }
@@ -143,11 +149,10 @@ function redraw() {
     updateColorScaleDomain();
     updateLegendScaleDomain();
     updateAxes1();
-    updateAxes2();
     updateDrawing1();
-    updateDrawing2();
 }
 
+/*
 function drawAxes2(){
 
     svg2.append("g")
@@ -156,15 +161,19 @@ function drawAxes2(){
 
     svg2.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + (height) + ")")
-        .call(xAxis);
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-65)");
 
     svg2.append("g")
         .attr("class", "legend")
-        .attr("transform", "translate(1100,0)")
+        .attr("transform", "translate(" + (width + margin.left) + ",0)")
         .call(legendAxis);
 }
-
 
 function updateAxes2(){
     svg2.select("g.y.axis").transition().duration(updateTime).call(yAxis);
@@ -177,7 +186,7 @@ function drawLegend2(){
     svg2.append("rect")
         .attr("width", 30)
         .attr("height", height)
-        .attr("x", 1070)
+        .attr("x", width + 10)
         .attr("y", 0)
         .style("fill", "url(#linear-gradient)")
 }
@@ -209,6 +218,7 @@ function updateDrawing2(){
         .attr("fill", function(d) { return barColors(d[1]);})
 
 }
+*/
 
 var buttons = d3.selectAll('input')
 buttons.on('change', handleClick)
@@ -236,7 +246,7 @@ var publisherYearToGenre = new Map();
 
 console.log(datasetSteam);
 
-function mapPublisherToDeveloper() {
+/*function mapPublisherToDeveloper() {
     for (elem of datasetSteam) {
         if (publisherToDeveloper.has(elem[3])) {
             arr = publisherToDeveloper.get(elem[3])
@@ -247,18 +257,29 @@ function mapPublisherToDeveloper() {
             var uniqueArr = [...new Set(arr)]
             publisherToDeveloper.set(elem[3],uniqueArr);
     }
+}*/
+
+function mapPublisherToDeveloper() {
+    for (elem of datasetSteam) {
+        if (publisherToDeveloper.has(elem[3])) {
+            arr = publisherToDeveloper.get(elem[3])
+            arr.push([elem[2], elem[0]])
+            publisherToDeveloper.set(elem[3], arr);
+        } else
+            arr = [elem[2], elem[0]];
+        publisherToDeveloper.set(elem[3], arr);
+    }
 }
 
 function mapPublisherYearToDeveloper() {
     for (elem of datasetSteam) {
-        if (publisherYearToDeveloper.has([elem[3],elem[1]])) {
-            arr = publisherYearToDeveloper.get([elem[3],elem[1]])
-            arr.push(elem[2])
+        if (publisherYearToDeveloper.has([elem[3], elem[1]])) {
+            arr = publisherYearToDeveloper.get([elem[3], elem[1]])
+            arr.push([elem[2], elem[0]])
             publisherYearToDeveloper.set([elem[3],elem[1]], arr);
         } else
-            arr=[elem[2]];
-        var uniqueArr = [...new Set(arr)]
-        publisherYearToDeveloper.set([elem[3],elem[1]],uniqueArr);
+            arr = [elem[2], elem[0]];
+        publisherYearToDeveloper.set([elem[3],elem[1]], arr);
     }
 }
 
@@ -266,25 +287,23 @@ function mapPublisherToGenre() {
     for (elem of datasetSteam) {
         if (publisherToGenre.has(elem[3])) {
             arr = publisherToGenre.get(elem[3])
-            arr.push(elem[4])
+            arr.push([elem[4], elem[0]])
             publisherToGenre.set(elem[3], arr);
         } else
-            arr=[elem[2]];
-        var uniqueArr = [...new Set(arr)]
-        publisherToGenre.set(elem[3],uniqueArr);
+            arr = [elem[4], elem[0]];
+        publisherToGenre.set(elem[3], arr);
     }
 }
 
 function mapPublisherYearToGenre() {
     for (elem of datasetSteam) {
-        if (publisherYearToGenre.has([elem[3],elem[1]])) {
-            arr = publisherYearToGenre.get([elem[3],elem[1]])
-            arr.push(elem[4])
+        if (publisherYearToGenre.has([elem[3], elem[1]])) {
+            arr = publisherYearToGenre.get([elem[3], elem[1]])
+            arr.push([elem[4], elem[0]])
             publisherYearToGenre.set([elem[3],elem[1]], arr);
         } else
-            arr=[elem[2]];
-        var uniqueArr = [...new Set(arr)]
-        publisherYearToGenre.set([elem[3],elem[1]],uniqueArr);
+            arr = [elem[4], elem[0]];
+        publisherYearToGenre.set([elem[3],elem[1]], arr);
     }
 }
 
@@ -293,6 +312,7 @@ console.log(publisherYearToDeveloper);
 console.log(publisherToGenre);
 console.log(publisherYearToGenre);
 
+console.log(publisherYearToDeveloper.entries())
 
 d3.json("data/completeDataset.json")
     .then(function(data) {
@@ -322,9 +342,11 @@ d3.json("data/dataset.json")
         drawLegend1();
         drawAxes1();
     	updateDrawing1();
-        drawLegend2();
+    	cartaCanta();
+    	evincesanremo();
+        /*drawLegend2();
         drawAxes2();
-        updateDrawing2();
+        updateDrawing2();*/
    	})
 	.catch(function(error) {
 		console.log(error); // Some error handling here

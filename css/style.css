@@ -73,7 +73,7 @@ label span:before {
 
 
 .container1 {
-    font: 16px sans-serif;
+    font: 17px sans-serif;
     border-radius: 25px;
     padding: 10px;
     border: 5px ridge cadetblue;
@@ -87,16 +87,13 @@ label span:before {
     display: table-cell;
 }
 
-.anni {
-
-}
 
 .row {
     position: absolute;
     top: 15px;
     right: 20px;
     display: table;
-    border-spacing: 30px 10px; /*Optional*/
+    border-spacing: 25px 10px; /*Optional*/
     height: 800px;
 
 }
@@ -105,7 +102,29 @@ label span:before {
     margin-top: 5px;
     margin-left: 30px;
     padding-left: 15px;
-    width: 1230px;
+    padding-top: 10px;
+    width: 1350px;
     border: 5px ridge cadetblue;
+}
+
+.devgen {
+    display: table;
+    padding: 10px;
+    margin-left: 30px;
+    border-spacing: 25px 0px;
+    border: 5px ridge cadetblue;
+    border-radius: 25px;
+}
+
+.dev {
+    font: 25px sans-serif;
+    font-weight: bolder;
+    display: table-cell;
+}
+
+.gen {
+    font: 25px sans-serif;
+    font-weight: bolder;
+    display: table-cell;
 }
 
