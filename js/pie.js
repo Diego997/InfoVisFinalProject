@@ -11,7 +11,7 @@ var svg = d3.select("#div2").append("svg")
     .attr("transform", "translate(" + piewidth / 2 + "," + pieheight / 2 + ")");
 
 var color = d3.scaleOrdinal()
-    .range(["#d7191c","#90eb9d"])
+    .range(["#d7191c","#90eb9d","#800080"])
 
 var pie = d3.pie()
     .value(d=>d[1])
@@ -25,27 +25,36 @@ var data_ready;
 function updateYear(a){
     year=a;
     updatePieValues();
-    updatePie();
 }
 
 function updatePub(a){
     pub=a;
-    console.log(pub)
+    publisher=a;
     updateScaleDomain(pub, devGen);
+    updateAxes1();
     updateDataset(pub, devGen);
     updateDrawing1();
     updatePieValues();
-    updatePie();
 }
 
 function updatePieValues() {
     var sumCount = publisherYearToReviews.get((pub+year))
-    percentage = parseInt(sumCount[0]/sumCount[1])
-    data=[(100-percentage), percentage]
+
+    if (sumCount) {
+        percentage = parseInt(sumCount[0]/sumCount[1])
+        data=[(100-percentage), percentage]
+        updatePie()
+    }
+    else{
+        data = [100, 0]
+        updateEmptyPie()
+    }
 }
 
-function updatePie() {
+function updateEmptyPie() {
     data_ready = pie(Object.entries(data))
+
+    d3.selectAll(".empty").remove()
     d3.selectAll(".numeroPercentile").remove()
     svg.exit().remove()
 
@@ -56,11 +65,28 @@ function updatePie() {
             .innerRadius(70)         // This is the size of the donut hole
             .outerRadius(radius)
         )
-        .attr('fill', d => color(d.data[0]))
+        .attr('fill', d => color(d.data[2]))
         .attr("stroke-width", 1)
         .attr("stroke", "white")
 
-    svg.selectAll('whatever').transition().duration(800)
+    var centralText = svg.append("text")
+        .attr("class", "empty")
+        .attr("y", 16)
+        .attr("x", -350)
+        .attr("fill", "#90eb9d")
+        .style("font-size", 50)
+        .text("No Data")
+}
+
+function updatePie() {
+    data_ready = pie(Object.entries(data))
+
+    d3.selectAll(".empty").remove()
+    d3.selectAll(".numeroPercentile").remove()
+
+    svg.selectAll('whatever')
+        .data(data_ready)
+        .join('path')
         .attr('d', d3.arc()
             .innerRadius(70)         // This is the size of the donut hole
             .outerRadius(radius)
@@ -77,5 +103,4 @@ function updatePie() {
         .style("font-size", 50)
 
     centralText.text(d3.format(".0%")(percentage / 100))
-
 }

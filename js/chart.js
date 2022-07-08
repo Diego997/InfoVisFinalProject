@@ -18,7 +18,7 @@ var barColors = d3.scaleLinear().range(["#2c7bb6", "#00a6ca","#00ccbc","#90eb9d"
 var yAxis = d3.axisLeft(yScale).ticks(10);
 var xAxis = d3.axisBottom(xScale)
 var legendAxis = d3.axisRight(legendScale).ticks(10);// Left = ticks on the left
-var publisher = "KOEI TECMO GAMES CO.";
+var publisher = "SEGA";
 var devGen = 0;
 yScale.domain([0, 100])
 barColors.domain([0, 100 / 8, 200 / 8, 300 / 8, 400 / 8, 500 / 8, 600 / 8, 700 / 8, 100]);
@@ -30,12 +30,6 @@ var svg1 = d3.select("#div1").append("svg")
     .append("g")                                           // g is a group
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-/*var svg2 = d3.select("#div2").append("svg")
-    .attr("width", width + margin.left + margin.right + widthLegend)     // i.e., 800 again
-    .attr("height", height + margin.top + margin.bottom + text)   // i.e., 300 again
-    .append("g")                                           // g is a group
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-*/
 
 function updateScaleDomain(pubb, devGen) {
     if (devGen==0) {
@@ -45,14 +39,19 @@ function updateScaleDomain(pubb, devGen) {
     }
     else {
         var mapDevtoRev = publisherToGenre.get(pubb);
-        xScale.domain(mapDevtoRev.keys().map(function (d) {return d}));
+        var arr = Array.from(mapDevtoRev.keys())
+        xScale.domain(arr.map(function (d) {return d}));
     }
 }
 
 function updateAxes1(){
     svg1.select("g.y.axis").transition().duration(updateTime).call(yAxis);
     svg1.select("g.legend").transition().duration(updateTime).call(legendAxis);
-    svg1.select("g.x.axis").transition().duration(updateTime).call(xAxis);
+    svg1.select("g.x.axis").transition().duration(updateTime).call(xAxis).selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-55)");
 }
 
 function drawAxes1(){
@@ -119,21 +118,18 @@ function drawLegend1(){
 }
 
 function updateDataset(pubb, devGen){
+    console.log(publisherToDeveloper)
     if (devGen==0) {
-        var mapDevtoRev = publisherToDeveloper.get(pubb);
-        dataSet = []
         dataSet = Array.from(publisherToDeveloper.get(pubb), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
-        console.log(dataSet)
     }
     else {
-        var mapGentoRev = publisherToGenre.get(pubb);
-        xScale.domain(mapGentoRev.keys().map(function (d) {return d}));
+        dataSet = Array.from(publisherToGenre.get(pubb), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
     }
 }
 
 function updateDrawing1(){
-
-    var bars = svg1.selectAll(".bar").data(dataSet, function (d) {return d});
+    console.log(dataSet)
+    var bars = svg1.selectAll(".bar").data(dataSet, function (d) {return d[0]});
 
     bars.exit().remove();
 
@@ -157,93 +153,12 @@ function updateDrawing1(){
         .attr("fill", function(d) { return barColors(d[1]);})
         .attr("stroke-width", 2)
         .attr("stroke", "white")
-
 }
+
 
 function redraw() {
     updateAxes1();
     updateDrawing1();
-}
-
-/*
-function drawAxes2(){
-
-    svg2.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
-
-    svg2.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-65)");
-
-    svg2.append("g")
-        .attr("class", "legend")
-        .attr("transform", "translate(" + (width + margin.left) + ",0)")
-        .call(legendAxis);
-}
-
-function updateAxes2(){
-    svg2.select("g.y.axis").transition().duration(updateTime).call(yAxis);
-    svg2.select("g.legend").transition().duration(updateTime).call(legendAxis);
-    svg2.select("g.x.axis").transition().duration(updateTime).call(xAxis);
-}
-
-function drawLegend2(){
-
-    svg2.append("rect")
-        .attr("width", 30)
-        .attr("height", height)
-        .attr("x", width + 10)
-        .attr("y", 0)
-        .style("fill", "url(#linear-gradient)")
-}
-
-function updateDrawing2(){
-    var bars = svg2.selectAll(".bar").data(dataSet, function(d){return d});
-
-    bars.exit().remove();
-
-    bars.enter().append("rect")
-        .attr("class", "bar")
-        .attr("stroke-width", 2)
-        .attr("stroke", "white")
-        .attr("x", function(d) { return xScale(d[2]); })
-        .attr("y", function(d) { return yScale(d[1]); })
-        .attr("width", xScale.bandwidth())
-        .attr("height", function(d) { return height - yScale(d[1]); })
-        .attr("fill", function(d) { return barColors(d[1]);})
-
-
-    bars.transition().duration(updateTime)
-        .attr("class", "bar")
-        .attr("stroke-width", 2)
-        .attr("stroke", "white")
-        .attr("x", function(d) { return xScale(d[2]); })
-        .attr("y", function(d) { return yScale(d[1]); })
-        .attr("width", xScale.bandwidth())
-        .attr("height", function(d) { return height - yScale(d[1]); })
-        .attr("fill", function(d) { return barColors(d[1]);})
-
-}
-*/
-
-var buttons = d3.selectAll('input')
-buttons.on('change', handleClick)
-
-function handleClick(){
-    for(elem of dataSet){
-        var swap1 = elem[0]
-        var swap0 = elem[1]
-        elem[1] = swap1
-        elem[0] = swap0
-    }
-    redraw()
 }
 
 var publisherToDeveloper = new Map();
@@ -273,14 +188,14 @@ function mapPublisherToDeveloper() {
         }
     }
 
-    for (elem of publisherToDeveloper) {
+   /* for (elem of publisherToDeveloper) {
         for (devs of publisherToDeveloper.values()) {
             for (dev of devs) {
                 media = parseInt(dev[1][0] / dev[1][1])
                 dev[1]=media
             }
         }
-    }
+    }*/
 }
 
 function mapPublisherYearToReviews() {
@@ -337,8 +252,8 @@ function switchDevGen(a){
 }
 
 console.log(publisherToDeveloper);
-console.log(publisherYearToReviews);
-console.log(publisherToGenre);
+//console.log(publisherYearToReviews);
+//console.log(publisherToGenre);
 
 d3.json("data/genDataset.json")
     .then(function(data) {
@@ -377,7 +292,6 @@ d3.json("data/devDataset.json")
         drawAxes1();
         updateDrawing1();
         updatePieValues();
-        updatePie();
     })
     .catch(function(error) {
         console.log(error); // Some error handling here
