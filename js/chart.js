@@ -234,17 +234,18 @@ function handleClick(){
 }
 
 
-var datasetSteam = [];
+var devDataset = [];
+var genDataset = [];
+var compDataset = [];
+
 
 var publisherToDeveloper = new Map();
 
-var publisherYearToDeveloper = new Map();
+var publisherYearToReviews = new Map();
 
 var publisherToGenre = new Map();
 
-var publisherYearToGenre = new Map();
-
-console.log(datasetSteam);
+console.log(devDataset);
 
 /*function mapPublisherToDeveloper() {
     for (elem of datasetSteam) {
@@ -260,70 +261,121 @@ console.log(datasetSteam);
 }*/
 
 function mapPublisherToDeveloper() {
-    for (elem of datasetSteam) {
-        if (publisherToDeveloper.has(elem[3])) {
-            arr = publisherToDeveloper.get(elem[3])
-            arr.push([elem[2], elem[0]])
-            publisherToDeveloper.set(elem[3], arr);
-        } else
-            arr = [elem[2], elem[0]];
-        publisherToDeveloper.set(elem[3], arr);
+
+    for (elem of devDataset) {
+        if ( publisherToDeveloper.has(elem[3]) ) {
+            if ( publisherToDeveloper.get(elem[3]).has(elem[2]) ) {
+                percentages = publisherToDeveloper.get(elem[3]).get(elem[2])[0] + parseInt(elem[0])
+                grades = publisherToDeveloper.get(elem[3]).get(elem[2])[1] + 1
+                publisherToDeveloper.get(elem[3]).set(elem[2], [percentages, grades])
+            }
+            else {
+                publisherToDeveloper.get(elem[3]).set(elem[2], [parseInt(elem[0]), 1])
+            }
+        }
+        else {
+            val = new Map()
+            val.set( elem[2], [parseInt(elem[0]), 1])
+            publisherToDeveloper.set(elem[3], val);
+        }
+    }
+
+    for (elem of publisherToDeveloper) {
+        for (devs of publisherToDeveloper.values()) {
+            for (dev of devs) {
+                media = parseInt(dev[1][0] / dev[1][1])
+                dev[1]=media
+            }
+        }
     }
 }
 
-function mapPublisherYearToDeveloper() {
-    for (elem of datasetSteam) {
-        if (publisherYearToDeveloper.has([elem[3], elem[1]])) {
-            arr = publisherYearToDeveloper.get([elem[3], elem[1]])
-            arr.push([elem[2], elem[0]])
-            publisherYearToDeveloper.set([elem[3],elem[1]], arr);
-        } else
-            arr = [elem[2], elem[0]];
-        publisherYearToDeveloper.set([elem[3],elem[1]], arr);
+function mapPublisherYearToReviews() {
+    for (elem of compDataset) {
+        var key = elem[3]+elem[1]
+        if (publisherYearToReviews.has(key)) {
+            sum = publisherYearToReviews.get(key)[0]+parseInt(elem[0])
+            count = publisherYearToReviews.get(key)[1]+1
+            publisherYearToReviews.set(key, [sum,count]);
+        } else {
+            publisherYearToReviews.set(key, [parseInt(elem[0]),1]);
+        }
+    }
+    for (elem of publisherYearToReviews) {
+        sum=elem[1][0];
+        count=elem[1][1];
+        media=parseInt(sum/count);
+        elem[1]=media;
     }
 }
 
 function mapPublisherToGenre() {
-    for (elem of datasetSteam) {
-        if (publisherToGenre.has(elem[3])) {
-            arr = publisherToGenre.get(elem[3])
-            arr.push([elem[4], elem[0]])
-            publisherToGenre.set(elem[3], arr);
-        } else
-            arr = [elem[4], elem[0]];
-        publisherToGenre.set(elem[3], arr);
+
+    for (elem of genDataset) {
+        if ( publisherToGenre.has(elem[3]) ) {
+            if ( publisherToGenre.get(elem[3]).has(elem[4]) ) {
+                percentages = publisherToGenre.get(elem[3]).get(elem[4])[0] + parseInt(elem[0])
+                grades = publisherToGenre.get(elem[3]).get(elem[4])[1] + 1
+                publisherToGenre.get(elem[3]).set(elem[4], [percentages, grades])
+            }
+            else {
+                publisherToGenre.get(elem[3]).set(elem[4], [parseInt(elem[0]), 1])
+            }
+        }
+        else {
+            val = new Map()
+            val.set( elem[4], [parseInt(elem[0]), 1])
+            publisherToGenre.set(elem[3], val);
+        }
+    }
+
+    for (elem of publisherToGenre) {
+        for (devs of publisherToGenre.values()) {
+            for (dev of devs) {
+                media = parseInt(dev[1][0] / dev[1][1])
+                dev[1]=media
+            }
+        }
     }
 }
 
-function mapPublisherYearToGenre() {
-    for (elem of datasetSteam) {
-        if (publisherYearToGenre.has([elem[3], elem[1]])) {
-            arr = publisherYearToGenre.get([elem[3], elem[1]])
-            arr.push([elem[4], elem[0]])
-            publisherYearToGenre.set([elem[3],elem[1]], arr);
-        } else
-            arr = [elem[4], elem[0]];
-        publisherYearToGenre.set([elem[3],elem[1]], arr);
-    }
-}
 
 console.log(publisherToDeveloper);
-console.log(publisherYearToDeveloper);
+console.log(publisherYearToReviews);
 console.log(publisherToGenre);
-console.log(publisherYearToGenre);
 
-console.log(publisherYearToDeveloper.entries())
 
-d3.json("data/completeDataset.json")
+d3.json("data/devDataset.json")
     .then(function(data) {
         data.forEach(row => {
             arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
-            datasetSteam.push(arr);
+            devDataset.push(arr);
         });
         mapPublisherToDeveloper();
-        mapPublisherYearToDeveloper();
+    })
+    .catch(function(error) {
+        console.log(error); // Some error handling here
+    });
+
+d3.json("data/genDataset.json")
+    .then(function(data) {
+        data.forEach(row => {
+            arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
+            genDataset.push(arr);
+        });
         mapPublisherToGenre();
-        mapPublisherYearToGenre();
+    })
+    .catch(function(error) {
+        console.log(error); // Some error handling here
+    });
+
+d3.json("data/compDataset.json")
+    .then(function(data) {
+        data.forEach(row => {
+            arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
+            compDataset.push(arr);
+        });
+        mapPublisherYearToReviews();
     })
     .catch(function(error) {
         console.log(error); // Some error handling here
@@ -342,8 +394,8 @@ d3.json("data/dataset.json")
         drawLegend1();
         drawAxes1();
     	updateDrawing1();
-    	cartaCanta();
-    	evincesanremo();
+    	updatePieValues();
+        drawPie();
         /*drawLegend2();
         drawAxes2();
         updateDrawing2();*/

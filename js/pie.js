@@ -10,33 +10,39 @@ var svg = d3.select("#div2").append("svg")
     .append("g")
     .attr("transform", "translate(" + piewidth / 2 + "," + pieheight / 2 + ")");
 
-function updateYear(a){
-    year = a;
-}
-
-function updatePub(a){
-    pub = a;
-}
-
-var aa = 50;
-
-function cartaCanta() {
-    var percentagesss = publisherToDeveloper.get(pub)
-    console.log(percentagesss)
-    var aa = percentagesss[1]
-}
-
-
-var data = {a: (100-aa), b: aa}
-
 var color = d3.scaleOrdinal()
     .range(["#d7191c","#90eb9d"])
 
 var pie = d3.pie()
     .value(d=>d[1])
 
-var data_ready = pie(Object.entries(data))
-function evincesanremo() {
+var percentage ;
+
+var data = [];
+
+var data_ready;
+
+function updateYear(a){
+    year=a;
+    updatePieValues();
+    drawPie();
+}
+
+function updatePub(a){
+    pub=a;
+    console.log(pub)
+    updatePieValues();
+    drawPie();
+}
+
+function updatePieValues() {
+    var sumCount = publisherYearToReviews.get((pub+year))
+    percentage = parseInt(sumCount[0]/sumCount[1])
+    data=[(100-percentage), percentage]
+}
+
+function drawPie() {
+    data_ready = pie(Object.entries(data))
     svg.selectAll('whatever')
         .data(data_ready)
         .join('path')
@@ -47,11 +53,36 @@ function evincesanremo() {
         .attr('fill', d => color(d.data[0]))
         .attr("stroke-width", 1)
         .attr("stroke", "white")
-}
-var centralText = svg.append("text")
-    .attr("y", 16)
-    .attr("x", -45)
-    .attr("fill","#90eb9d")
-    .style("font-size", 50);
 
-centralText.text(d3.format(".0%")(.7));
+    var centralText = svg.append("text")
+        .attr("y", 16)
+        .attr("x", -45)
+        .attr("fill", "#90eb9d")
+        .style("font-size", 50);
+
+    centralText.text(d3.format(".0%")(percentage/100));
+}
+
+function updatePie() {
+    data_ready = pie(Object.entries(data))
+    svg.exit().remove();
+
+    svg.selectAll('whatever')
+        .data(data_ready)
+        .join('path')
+        .attr('d', d3.arc()
+            .innerRadius(70)         // This is the size of the donut hole
+            .outerRadius(radius)
+        )
+        .attr('fill', d => color(d.data[0]))
+        .attr("stroke-width", 1)
+        .attr("stroke", "white")
+
+    var centralText = svg.append("text")
+        .attr("y", 16)
+        .attr("x", -45)
+        .attr("fill", "#90eb9d")
+        .style("font-size", 50);
+
+    centralText.text(d3.format(".0%")(percentage/100));
+}
