@@ -1,12 +1,15 @@
 const updateTime = 800; // time for transitions
-const margin = {top: 50, right: 20, bottom: 10, left: 40};
+const margin = {top: 50, right: 20, bottom: 100, left: 40};
 const text = 50;
 const widthLegend = 100;
 const width = 1350 - margin.left - margin.right - widthLegend;
-const height = 450 - margin.top - margin.bottom - text;
+const height = 460 - margin.top - margin.bottom - text;
 const ldmargin = 150;
 
 var dataSet = [];
+var devDataset = [];
+var genDataset = [];
+var compDataset = [];
 var xScale = d3.scaleBand().rangeRound([2, width]).padding(.1);
 var yScale = d3.scaleLinear().range([height, 0]);
 var legendScale = d3.scaleLinear().range([height, 0]);
@@ -15,6 +18,11 @@ var barColors = d3.scaleLinear().range(["#2c7bb6", "#00a6ca","#00ccbc","#90eb9d"
 var yAxis = d3.axisLeft(yScale).ticks(10);
 var xAxis = d3.axisBottom(xScale)
 var legendAxis = d3.axisRight(legendScale).ticks(10);// Left = ticks on the left
+var publisher = "KOEI TECMO GAMES CO.";
+var devGen = 0;
+yScale.domain([0, 100])
+barColors.domain([0, 100 / 8, 200 / 8, 300 / 8, 400 / 8, 500 / 8, 600 / 8, 700 / 8, 100]);
+legendScale.domain([0, 100]);
 
 var svg1 = d3.select("#div1").append("svg")
     .attr("width", width + margin.left + margin.right + widthLegend)     // i.e., 800 again
@@ -29,22 +37,16 @@ var svg1 = d3.select("#div1").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 */
 
-
-function updateXScaleDomain() {
-    xScale.domain(dataSet.map(function(d) { return d[2]}));
-}
-
-function updateYScaleDomain(){
-    yScale.domain([0, d3.max(dataSet, function(d) { return d[1]; })]);
-}
-
-function updateColorScaleDomain(){
-    var max=d3.max(dataSet, function(d){ return d[1];})
-    barColors.domain([0,max*1/8,max*2/8,max*3/8,max*4/8,max*5/8,max*6/8,max*7/8,max]);
-}
-
-function updateLegendScaleDomain(){
-    legendScale.domain([0, d3.max(dataSet, function(d) { return d[1]; })]);
+function updateScaleDomain(pubb, devGen) {
+    if (devGen==0) {
+        var mapDevtoRev = publisherToDeveloper.get(pubb);
+        var arr = Array.from(mapDevtoRev.keys())
+        xScale.domain(arr.map(function (d) {return d}));
+    }
+    else {
+        var mapDevtoRev = publisherToGenre.get(pubb);
+        xScale.domain(mapDevtoRev.keys().map(function (d) {return d}));
+    }
 }
 
 function updateAxes1(){
@@ -67,7 +69,7 @@ function drawAxes1(){
         .style("text-anchor", "end")
         .attr("dx", "-.8em")
         .attr("dy", ".15em")
-        .attr("transform", "rotate(-65)");
+        .attr("transform", "rotate(-55)");
 
     svg1.append("g")
         .attr("class", "legend")
@@ -116,14 +118,28 @@ function drawLegend1(){
         .style("fill", "url(#linear-gradient)")
 }
 
+function updateDataset(pubb, devGen){
+    if (devGen==0) {
+        var mapDevtoRev = publisherToDeveloper.get(pubb);
+        dataSet = []
+        dataSet = Array.from(publisherToDeveloper.get(pubb), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
+        console.log(dataSet)
+    }
+    else {
+        var mapGentoRev = publisherToGenre.get(pubb);
+        xScale.domain(mapGentoRev.keys().map(function (d) {return d}));
+    }
+}
+
 function updateDrawing1(){
-    var bars = svg1.selectAll(".bar").data(dataSet, function(d){return d});
+
+    var bars = svg1.selectAll(".bar").data(dataSet, function (d) {return d});
 
     bars.exit().remove();
 
     bars.enter().append("rect")
         .attr("class", "bar")
-        .attr("x", function(d) { return xScale(d[2]); })
+        .attr("x", function(d) { return xScale(d[0]); })
         .attr("y", function(d) { return yScale(d[1]); })
         .attr("width", xScale.bandwidth() )
         .attr("height", function(d) { return height - yScale(d[1]); })
@@ -134,7 +150,7 @@ function updateDrawing1(){
 
     bars.transition().duration(updateTime)
         .attr("class", "bar")
-        .attr("x", function(d) { return xScale(d[2]); })
+        .attr("x", function(d) { return xScale(d[0]); })
         .attr("y", function(d) { return yScale(d[1]); })
         .attr("width", xScale.bandwidth() )
         .attr("height", function(d) { return height- yScale(d[1]); })
@@ -145,9 +161,6 @@ function updateDrawing1(){
 }
 
 function redraw() {
-    updateYScaleDomain();
-    updateColorScaleDomain();
-    updateLegendScaleDomain();
     updateAxes1();
     updateDrawing1();
 }
@@ -233,32 +246,12 @@ function handleClick(){
     redraw()
 }
 
-
-var devDataset = [];
-var genDataset = [];
-var compDataset = [];
-
-
 var publisherToDeveloper = new Map();
 
 var publisherYearToReviews = new Map();
 
 var publisherToGenre = new Map();
 
-console.log(devDataset);
-
-/*function mapPublisherToDeveloper() {
-    for (elem of datasetSteam) {
-        if (publisherToDeveloper.has(elem[3])) {
-            arr = publisherToDeveloper.get(elem[3])
-            arr.push(elem[2])
-            publisherToDeveloper.set(elem[3], arr);
-        } else
-            arr=[elem[2]];
-            var uniqueArr = [...new Set(arr)]
-            publisherToDeveloper.set(elem[3],uniqueArr);
-    }
-}*/
 
 function mapPublisherToDeveloper() {
 
@@ -339,23 +332,13 @@ function mapPublisherToGenre() {
     }
 }
 
+function switchDevGen(a){
+    if(a=="Dev"){}
+}
 
 console.log(publisherToDeveloper);
 console.log(publisherYearToReviews);
 console.log(publisherToGenre);
-
-
-d3.json("data/devDataset.json")
-    .then(function(data) {
-        data.forEach(row => {
-            arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
-            devDataset.push(arr);
-        });
-        mapPublisherToDeveloper();
-    })
-    .catch(function(error) {
-        console.log(error); // Some error handling here
-    });
 
 d3.json("data/genDataset.json")
     .then(function(data) {
@@ -381,26 +364,22 @@ d3.json("data/compDataset.json")
         console.log(error); // Some error handling here
     });
 
-d3.json("data/dataset.json")
-	.then(function(data) {
+d3.json("data/devDataset.json")
+    .then(function(data) {
         data.forEach(row => {
             arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
-            dataSet.push(arr);
+            devDataset.push(arr);
         });
-        updateYScaleDomain();
-        updateXScaleDomain();
-        updateColorScaleDomain();
-        updateLegendScaleDomain()
+        mapPublisherToDeveloper();
+        updateScaleDomain(publisher, devGen);
+        updateDataset(publisher, devGen);
         drawLegend1();
         drawAxes1();
-    	updateDrawing1();
-    	updatePieValues();
-        drawPie();
-        /*drawLegend2();
-        drawAxes2();
-        updateDrawing2();*/
-   	})
-	.catch(function(error) {
-		console.log(error); // Some error handling here
-  	});
+        updateDrawing1();
+        updatePieValues();
+        updatePie();
+    })
+    .catch(function(error) {
+        console.log(error); // Some error handling here
+    });
 

@@ -2,8 +2,8 @@ var piewidth = 1300
 var pieheight = 300
 var piemargin = 20
 var radius = Math.min(piewidth, pieheight) / 2 - piemargin
-var pub = "Paradox Interactive"
-var year = "2018"
+var pub = "KOEI TECMO GAMES CO."
+var year = "2019"
 var svg = d3.select("#div2").append("svg")
     .attr("width", piewidth)
     .attr("height", pieheight)
@@ -25,14 +25,17 @@ var data_ready;
 function updateYear(a){
     year=a;
     updatePieValues();
-    drawPie();
+    updatePie();
 }
 
 function updatePub(a){
     pub=a;
     console.log(pub)
+    updateScaleDomain(pub, devGen);
+    updateDataset(pub, devGen);
+    updateDrawing1();
     updatePieValues();
-    drawPie();
+    updatePie();
 }
 
 function updatePieValues() {
@@ -41,31 +44,10 @@ function updatePieValues() {
     data=[(100-percentage), percentage]
 }
 
-function drawPie() {
-    data_ready = pie(Object.entries(data))
-    svg.selectAll('whatever')
-        .data(data_ready)
-        .join('path')
-        .attr('d', d3.arc()
-            .innerRadius(70)         // This is the size of the donut hole
-            .outerRadius(radius)
-        )
-        .attr('fill', d => color(d.data[0]))
-        .attr("stroke-width", 1)
-        .attr("stroke", "white")
-
-    var centralText = svg.append("text")
-        .attr("y", 16)
-        .attr("x", -45)
-        .attr("fill", "#90eb9d")
-        .style("font-size", 50);
-
-    centralText.text(d3.format(".0%")(percentage/100));
-}
-
 function updatePie() {
     data_ready = pie(Object.entries(data))
-    svg.exit().remove();
+    d3.selectAll(".numeroPercentile").remove()
+    svg.exit().remove()
 
     svg.selectAll('whatever')
         .data(data_ready)
@@ -78,11 +60,22 @@ function updatePie() {
         .attr("stroke-width", 1)
         .attr("stroke", "white")
 
+    svg.selectAll('whatever').transition().duration(800)
+        .attr('d', d3.arc()
+            .innerRadius(70)         // This is the size of the donut hole
+            .outerRadius(radius)
+        )
+        .attr('fill', d => color(d.data[0]))
+        .attr("stroke-width", 1)
+        .attr("stroke", "white")
+
     var centralText = svg.append("text")
+        .attr("class", "numeroPercentile")
         .attr("y", 16)
         .attr("x", -45)
         .attr("fill", "#90eb9d")
-        .style("font-size", 50);
+        .style("font-size", 50)
 
-    centralText.text(d3.format(".0%")(percentage/100));
+    centralText.text(d3.format(".0%")(percentage / 100))
+
 }
