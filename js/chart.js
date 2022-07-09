@@ -1,28 +1,30 @@
+// constants
 const updateTime = 800; // time for transitions
 const margin = {top: 50, right: 20, bottom: 100, left: 40, text: 50, legend:100};
 const width = 1350 - margin.left - margin.right - margin.legend;
 const height = 460 - margin.top - margin.bottom - margin.text;
+const yScale = d3.scaleLinear().range([height, 0]).domain([0, 100]);
+const legendScale = d3.scaleLinear().range([height, 0]).domain([0, 100]);
+const barColors = d3.scaleLinear()
+    .range(["#2c7bb6", "#00a6ca","#00ccbc","#90eb9d","#ffff8c", "#f9d057","#f29e2e","#e76818","#d7191c"])
+    .domain([0, 100 / 8, 200 / 8, 300 / 8, 400 / 8, 500 / 8, 600 / 8, 700 / 8, 100]);
 
-var dataSet = [];
+// variables
+var dataBar = [];
 var xScale = d3.scaleBand().rangeRound([2, width]).padding(.1);
-var yScale = d3.scaleLinear().range([height, 0]);
-var legendScale = d3.scaleLinear().range([height, 0]);
-var barColors = d3.scaleLinear().range(["#2c7bb6", "#00a6ca","#00ccbc","#90eb9d","#ffff8c",
-    "#f9d057","#f29e2e","#e76818","#d7191c"]);
 var yAxis = d3.axisLeft(yScale).ticks(10);
 var xAxis = d3.axisBottom(xScale)
 var legendAxis = d3.axisRight(legendScale).ticks(10);// Left = ticks on the left
-yScale.domain([0, 100])
-barColors.domain([0, 100 / 8, 200 / 8, 300 / 8, 400 / 8, 500 / 8, 600 / 8, 700 / 8, 100]);
-legendScale.domain([0, 100]);
 
-var svg1 = d3.select("#barchart").append("svg")
+// barchart initialization
+var svgBar = d3.select("#barchart").append("svg")
     .attr("width", width + margin.left + margin.right + margin.legend)     // i.e., 800 again
     .attr("height", height + margin.top + margin.bottom + margin.text)// i.e., 300 again
     .append("g")                                           // g is a group
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-function updateScaleDomain() {
+//function
+function updateScaleDomain(){
     if (devGen==0) {
         var mapDevtoRev = publisherToDeveloper.get(pub);
         var arr = Array.from(mapDevtoRev.keys())
@@ -35,23 +37,23 @@ function updateScaleDomain() {
     }
 }
 
-function updateAxes1(){
-    svg1.select("g.y.axis").transition().duration(updateTime).call(yAxis);
-    svg1.select("g.legend").transition().duration(updateTime).call(legendAxis);
-    svg1.select("g.x.axis").transition().duration(updateTime).call(xAxis).selectAll("text")
+function updateAxes(){
+    svgBar.select("g.y.axis").transition().duration(updateTime).call(yAxis);
+    svgBar.select("g.legend").transition().duration(updateTime).call(legendAxis);
+    svgBar.select("g.x.axis").transition().duration(updateTime).call(xAxis).selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", "-.8em")
         .attr("dy", ".15em")
         .attr("transform", "rotate(-55)");
 }
 
-function drawAxes1(){
+function drawAxes(){
 
-    svg1.append("g")
+    svgBar.append("g")
         .attr("class", "y axis")
         .call(yAxis);
 
-    svg1.append("g")
+    svgBar.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis)
@@ -61,13 +63,13 @@ function drawAxes1(){
         .attr("dy", ".15em")
         .attr("transform", "rotate(-55)");
 
-    svg1.append("g")
+    svgBar.append("g")
         .attr("class", "legend")
         .attr("transform", "translate(" + (width + margin.left) + ",0)")
         .call(legendAxis);
 
 // Y axis label:
-    svg1.append("text")
+    svgBar.append("text")
         .attr("text-anchor", "end")
         .attr("y", -25)
         .attr("x", margin.left+100)
@@ -75,8 +77,8 @@ function drawAxes1(){
         .text("% Positive Reviews")
 }
 
-function drawLegend1(){
-    var linearGradient = svg1.append("linearGradient")
+function drawLegend(){
+    var linearGradient = svgBar.append("linearGradient")
         .attr("id","linear-gradient");
     linearGradient
         .attr("x1", "0%")
@@ -100,7 +102,7 @@ function drawLegend1(){
         .attr("offset", function(d) { return d.offset; })
         .attr("stop-color", function(d) { return d.color; });
 
-    svg1.append("rect")
+    svgBar.append("rect")
         .attr("width", 30)
         .attr("height", height)
         .attr("x", width + 10)
@@ -111,16 +113,16 @@ function drawLegend1(){
 function updateDataset(){
     console.log(publisherToDeveloper)
     if (devGen==0) {
-        dataSet = Array.from(publisherToDeveloper.get(pub), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
+        dataBar = Array.from(publisherToDeveloper.get(pub), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
     }
     else {
-        dataSet = Array.from(publisherToGenre.get(pub), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
+        dataBar = Array.from(publisherToGenre.get(pub), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
     }
 }
 
-function updateDrawing1(){
-    console.log(dataSet)
-    var bars = svg1.selectAll(".bar").data(dataSet, function (d) {return d[0]});
+function updateDrawing(){
+    console.log(dataBar)
+    var bars = svgBar.selectAll(".bar").data(dataBar, function (d) {return d[0]});
 
     bars.exit().remove();
 
@@ -146,11 +148,11 @@ function updateDrawing1(){
         .attr("stroke", "white")
 }
 
-function redraw() {
+function redraw(){
     updateScaleDomain();
-    updateAxes1();
+    updateAxes();
     updateDataset();
-    updateDrawing1();
+    updateDrawing();
     updatePieValues();
 }
 

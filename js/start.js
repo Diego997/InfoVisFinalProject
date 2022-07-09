@@ -1,13 +1,14 @@
+// variables
 var pub = "2K";
 var devGen = 0;
 var devDataset = [];
 var genDataset = [];
 var compDataset = [];
-
 var publisherToDeveloper = new Map();
 var publisherYearToReviews = new Map();
 var publisherToGenre = new Map();
 
+//functions
 function mapPublisherToDeveloper() {
     for (elem of devDataset) {
         if ( publisherToDeveloper.has(elem[3]) ) {
@@ -109,9 +110,9 @@ d3.json("data/devDataset.json")
         mapPublisherToDeveloper();
         updateScaleDomain();
         updateDataset();
-        drawLegend1();
-        drawAxes1();
-        updateDrawing1();
+        drawLegend();
+        drawAxes();
+        updateDrawing();
         updatePieValues();
     })
     .catch(function(error) {

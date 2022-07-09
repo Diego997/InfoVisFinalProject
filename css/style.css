@@ -94,14 +94,14 @@ label span:before {
     top: 15px;
     right: 20px;
     display: table;
-    border-spacing: 25px 10px; /*Optional*/
+    border-spacing: 13px 15px; /*Optional*/
     height: 800px;
 
 }
 .svg {
     background-color: black;
     border-radius: 25px;
-    margin-top: 5px;
+    margin-top: 17px;
     margin-left: 30px;
     padding-left: 15px;
     padding-top: 10px;
