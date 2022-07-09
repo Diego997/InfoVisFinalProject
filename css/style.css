@@ -10,10 +10,6 @@
 .legend {
     font: 16px sans-serif;
 }
-body {
-    background-color: ghostwhite;
-        color:black;
-}
 
 *, *:after, *:before {
     box-sizing: border-box;
@@ -21,13 +17,15 @@ body {
 body {
     color: whitesmoke;
     font: 20px sans-serif;
-    background-color: black;
+    background-color: #2a2f36;
 }
+
 form {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
 }
+
 label {
     display: flex;
     cursor: pointer;
@@ -41,7 +39,7 @@ label input {
     left: -9999px;
 }
 label input:checked + span {
-    background-color: cadetblue;
+    background-color: cornflowerblue;
 }
 label input:checked + span:before {
     box-shadow: inset 0 0 0 0.4375em #00005c;
@@ -54,7 +52,7 @@ label span {
     transition: 0.25s ease;
 }
 label span:hover {
-    background-color: cadetblue;
+    background-color: cornflowerblue;
 }
 label span:before {
     display: flex;
@@ -62,7 +60,7 @@ label span:before {
     content: "
     "
 ;
-    background-color: cadetblue;
+    background-color: cornflowerblue;
     width: 1.5em;
     height: 1.5em;
     border-radius: 50%;
@@ -73,17 +71,20 @@ label span:before {
 
 
 .container1 {
+    background-color: black;
     font: 17px sans-serif;
     border-radius: 25px;
     padding: 10px;
-    border: 5px ridge cadetblue;
+    border: 5px ridge cornflowerblue;
     display: table-cell
 }
 
 .container2 {
+    background-color: black;
+    font: 21px sans-serif;
     border-radius: 25px;
     padding: 10px;
-    border: 5px ridge cadetblue;
+    border: 5px ridge cornflowerblue;
     display: table-cell;
 }
 
@@ -98,33 +99,33 @@ label span:before {
 
 }
 .svg {
+    background-color: black;
     border-radius: 25px;
     margin-top: 5px;
     margin-left: 30px;
     padding-left: 15px;
     padding-top: 10px;
     width: 1350px;
-    border: 5px ridge cadetblue;
+    border: 5px ridge cornflowerblue;
 }
 
 .devgen {
-    display: table;
+    background-color: black;
     padding: 10px;
+    padding-bottom: 0px;
     margin-left: 30px;
     border-spacing: 25px 0px;
-    border: 5px ridge cadetblue;
+    border: 5px ridge cornflowerblue;
     border-radius: 25px;
+    font-weight: bolder;
+    display: inline-block;
 }
 
-.dev {
-    font: 25px sans-serif;
-    font-weight: bolder;
-    display: table-cell;
+label.l {
+    display: inline-block;
 }
 
-.gen {
-    font: 25px sans-serif;
-    font-weight: bolder;
-    display: table-cell;
+form.l {
+    display: inline-block;
 }
 

@@ -9,28 +9,27 @@
 </head>
 <body>
 <div class="devgen" id="devgen">
-    <div class="dev">
-        <label>
-            <input onclick="switchDevGen('Dev')" type="radio" value="3" name="radio" checked/>
-            <span>Developer</span>
+    <form class="l">
+        <label class="l">
+            <input onclick="switchDevGen(0)" type="radio" value="3" name="radio" checked/>
+            <span class="dev">Developer</span>
         </label>
-    </div>
-    <div class="gen">
-        <label>
-            <input onclick="switchDevGen('Gen')" type="radio" value="3" name="radio"/>
-            <span>Genre</span>
+        <label class="l">
+            <input onclick="switchDevGen(1)" type="radio" value="3" name="radio" />
+            <span class="dev">Genre</span>
         </label>
-    </div>
+    </form>
 </div>
 <div class="svg" >
-    <div id="div1"></div>
+    <div id="barchart"></div>
 </div>
 <div class="svg" >
-    <div id="div2"></div>
+    <div id="piechart"></div>
 </div>
 <div class="row">
 <div class="container1" id="year">
     <h2>YEAR</h2>
+    <form>
         <label>
             <input onclick="updateYear('2019')" type="radio" value="2019" name="radio" checked/>
             <span>2019</span>
@@ -111,77 +110,80 @@
             <input onclick="updateYear('2000')" type="radio" value="3" name="radio"/>
             <span>2000</span>
         </label>
+    </form>
 </div>
 <div class="container2">
     <h2>PUBLISHER</h2>
     <form>
         <label>
-            <input onclick="updatePub('KOEI TECMO GAMES CO.')" type="radio" name="radio" value="1" checked/>
-            <span>KOEI TECMO GAMES CO.</span>
-        </label>
-        <label>
-            <input onclick="updatePub('Degica')" type="radio" value="2" name="radio"/>
-            <span>Degica</span>
-        </label>
-        <label>
-            <input onclick="updatePub('Dovetail Games - Trains')" type="radio" value="3" name="radio"/>
-            <span>Dovetail Games - Trains</span>
-        </label>
-        <label>
-            <input onclick="updatePub('Paradox Interactive')" type="radio" value="3" name="radio"/>
-            <span>Paradox Interactive</span>
-        </label>
-        <label>
-            <input onclick="updatePub('SEGA')" type="radio" value="3" name="radio"/>
-            <span>SEGA</span>
-        </label>
-        <label>
-            <input onclick="updatePub('Ubisoft')" type="radio" value="3" name="radio"/>
-            <span>Ubisoft</span>
-        </label>
-        <label>
-            <input onclick="updatePub('Big Fish Games')" type="radio" value="3" name="radio"/>
-            <span>Big Fish Games</span>
-        </label>
-        <label>
-            <input onclick="updatePub('BANDAI NAMCO Entertainment')" type="radio" value="3" name="radio"/>
-            <span>BANDAI NAMCO Entertainment</span>
-        </label>
-        <label>
-            <input onclick="updatePub('Activision')" type="radio" value="3" name="radio"/>
-            <span>Activision</span>
-        </label>
-        <label>
-            <input onclick="updatePub('Dovetail Games - Flight')" type="radio" value="3" name="radio"/>
-            <span>Dovetail Games - Flight</span>
-        </label>
-        <label>
-            <input onclick="updatePub('2K')" type="radio" value="3" name="radio"/>
+            <input onclick="updatePub('2K')" type="radio" name="radio" checked/>
             <span>2K</span>
         </label>
         <label>
-            <input onclick="updatePub('THQ Nordic')" type="radio" value="3" name="radio"/>
-            <span>THQ Nordic</span>
+            <input onclick="updatePub('Activision')" type="radio" name="radio"/>
+            <span>Activision</span>
         </label>
         <label>
-            <input onclick="updatePub('Slitherine Ltd.')" type="radio" value="3" name="radio"/>
-            <span>Slitherine Ltd.</span>
+            <input onclick="updatePub('BANDAI NAMCO Entertainment')" type="radio" name="radio"/>
+            <span>BANDAI NAMCO Entertainment</span>
         </label>
         <label>
-            <input onclick="updatePub('XSEED Games')" type="radio" value="3" name="radio"/>
-            <span>XSEED Games</span>
+            <input onclick="updatePub('Big Fish Games')" type="radio" name="radio"/>
+            <span>Big Fish Games</span>
         </label>
         <label>
-            <input onclick="updatePub('Sekai Project')" type="radio" value="3" name="radio"/>
+            <input onclick="updatePub('Choice of Games')" type="radio" name="radio"/>
+            <span>Choice of Games</span>
+        </label>
+        <label>
+            <input onclick="updatePub('Degica')" type="radio" name="radio"/>
+            <span>Degica</span>
+        </label>
+        <label>
+            <input onclick="updatePub('Dovetail Games - Flight')" type="radio" name="radio"/>
+            <span>Dovetail Games - Flight</span>
+        </label>
+        <label>
+            <input onclick="updatePub('Dovetail Games - Trains')" type="radio" name="radio"/>
+            <span>Dovetail Games - Trains</span>
+        </label>
+        <label>
+            <input onclick="updatePub('KOEI TECMO GAMES CO.')" type="radio" name="radio" />
+            <span>KOEI TECMO GAMES CO.</span>
+        </label>
+        <label>
+            <input onclick="updatePub('Paradox Interactive')" type="radio" name="radio"/>
+            <span>Paradox Interactive</span>
+        </label>
+        <label>
+            <input onclick="updatePub('SEGA')" type="radio" name="radio"/>
+            <span>SEGA</span>
+        </label>
+        <label>
+            <input onclick="updatePub('Sekai Project')" type="radio" name="radio"/>
             <span>Sekai Project</span>
         </label>
         <label>
-            <input onclick="updatePub('Choice of Games')" type="radio" value="3" name="radio"/>
-            <span>Choice of Games</span>
+            <input onclick="updatePub('Slitherine Ltd.')" type="radio" name="radio"/>
+            <span>Slitherine Ltd.</span>
         </label>
+        <label>
+            <input onclick="updatePub('THQ Nordic')" type="radio" name="radio"/>
+            <span>THQ Nordic</span>
+        </label>
+        <label>
+            <input onclick="updatePub('Ubisoft')" type="radio" name="radio"/>
+            <span>Ubisoft</span>
+        </label>
+        <label>
+            <input onclick="updatePub('XSEED Games')" type="radio" name="radio"/>
+            <span>XSEED Games</span>
+        </label>
+
     </form>
 </div>
 </div>
+<script src="js/start.js"></script>
 <script src="js/chart.js"></script>
 <script src="js/pie.js"></script>
 </body>

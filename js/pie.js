@@ -4,7 +4,7 @@ var piemargin = 20
 var radius = Math.min(piewidth, pieheight) / 2 - piemargin
 var pub = "KOEI TECMO GAMES CO."
 var year = "2019"
-var svg = d3.select("#div2").append("svg")
+var svg = d3.select("#piechart").append("svg")
     .attr("width", piewidth)
     .attr("height", pieheight)
     .append("g")

@@ -1,15 +1,10 @@
 const updateTime = 800; // time for transitions
-const margin = {top: 50, right: 20, bottom: 100, left: 40};
-const text = 50;
-const widthLegend = 100;
-const width = 1350 - margin.left - margin.right - widthLegend;
-const height = 460 - margin.top - margin.bottom - text;
-const ldmargin = 150;
+const margin = {top: 50, right: 20, bottom: 100, left: 40, text: 50, legend:100};
+const width = 1350 - margin.left - margin.right - margin.legend;
+const height = 460 - margin.top - margin.bottom - margin.text;
 
 var dataSet = [];
-var devDataset = [];
-var genDataset = [];
-var compDataset = [];
+
 var xScale = d3.scaleBand().rangeRound([2, width]).padding(.1);
 var yScale = d3.scaleLinear().range([height, 0]);
 var legendScale = d3.scaleLinear().range([height, 0]);
@@ -24,9 +19,9 @@ yScale.domain([0, 100])
 barColors.domain([0, 100 / 8, 200 / 8, 300 / 8, 400 / 8, 500 / 8, 600 / 8, 700 / 8, 100]);
 legendScale.domain([0, 100]);
 
-var svg1 = d3.select("#div1").append("svg")
-    .attr("width", width + margin.left + margin.right + widthLegend)     // i.e., 800 again
-    .attr("height", height + margin.top + margin.bottom + text)// i.e., 300 again
+var svg1 = d3.select("#barchart").append("svg")
+    .attr("width", width + margin.left + margin.right + margin.legend)     // i.e., 800 again
+    .attr("height", height + margin.top + margin.bottom + margin.text)// i.e., 300 again
     .append("g")                                           // g is a group
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -155,145 +150,10 @@ function updateDrawing1(){
         .attr("stroke", "white")
 }
 
-
 function redraw() {
     updateAxes1();
     updateDrawing1();
 }
 
-var publisherToDeveloper = new Map();
 
-var publisherYearToReviews = new Map();
-
-var publisherToGenre = new Map();
-
-
-function mapPublisherToDeveloper() {
-
-    for (elem of devDataset) {
-        if ( publisherToDeveloper.has(elem[3]) ) {
-            if ( publisherToDeveloper.get(elem[3]).has(elem[2]) ) {
-                percentages = publisherToDeveloper.get(elem[3]).get(elem[2])[0] + parseInt(elem[0])
-                grades = publisherToDeveloper.get(elem[3]).get(elem[2])[1] + 1
-                publisherToDeveloper.get(elem[3]).set(elem[2], [percentages, grades])
-            }
-            else {
-                publisherToDeveloper.get(elem[3]).set(elem[2], [parseInt(elem[0]), 1])
-            }
-        }
-        else {
-            val = new Map()
-            val.set( elem[2], [parseInt(elem[0]), 1])
-            publisherToDeveloper.set(elem[3], val);
-        }
-    }
-
-   /* for (elem of publisherToDeveloper) {
-        for (devs of publisherToDeveloper.values()) {
-            for (dev of devs) {
-                media = parseInt(dev[1][0] / dev[1][1])
-                dev[1]=media
-            }
-        }
-    }*/
-}
-
-function mapPublisherYearToReviews() {
-    for (elem of compDataset) {
-        var key = elem[3]+elem[1]
-        if (publisherYearToReviews.has(key)) {
-            sum = publisherYearToReviews.get(key)[0]+parseInt(elem[0])
-            count = publisherYearToReviews.get(key)[1]+1
-            publisherYearToReviews.set(key, [sum,count]);
-        } else {
-            publisherYearToReviews.set(key, [parseInt(elem[0]),1]);
-        }
-    }
-    for (elem of publisherYearToReviews) {
-        sum=elem[1][0];
-        count=elem[1][1];
-        media=parseInt(sum/count);
-        elem[1]=media;
-    }
-}
-
-function mapPublisherToGenre() {
-
-    for (elem of genDataset) {
-        if ( publisherToGenre.has(elem[3]) ) {
-            if ( publisherToGenre.get(elem[3]).has(elem[4]) ) {
-                percentages = publisherToGenre.get(elem[3]).get(elem[4])[0] + parseInt(elem[0])
-                grades = publisherToGenre.get(elem[3]).get(elem[4])[1] + 1
-                publisherToGenre.get(elem[3]).set(elem[4], [percentages, grades])
-            }
-            else {
-                publisherToGenre.get(elem[3]).set(elem[4], [parseInt(elem[0]), 1])
-            }
-        }
-        else {
-            val = new Map()
-            val.set( elem[4], [parseInt(elem[0]), 1])
-            publisherToGenre.set(elem[3], val);
-        }
-    }
-
-    for (elem of publisherToGenre) {
-        for (devs of publisherToGenre.values()) {
-            for (dev of devs) {
-                media = parseInt(dev[1][0] / dev[1][1])
-                dev[1]=media
-            }
-        }
-    }
-}
-
-function switchDevGen(a){
-    if(a=="Dev"){}
-}
-
-console.log(publisherToDeveloper);
-//console.log(publisherYearToReviews);
-//console.log(publisherToGenre);
-
-d3.json("data/genDataset.json")
-    .then(function(data) {
-        data.forEach(row => {
-            arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
-            genDataset.push(arr);
-        });
-        mapPublisherToGenre();
-    })
-    .catch(function(error) {
-        console.log(error); // Some error handling here
-    });
-
-d3.json("data/compDataset.json")
-    .then(function(data) {
-        data.forEach(row => {
-            arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
-            compDataset.push(arr);
-        });
-        mapPublisherYearToReviews();
-    })
-    .catch(function(error) {
-        console.log(error); // Some error handling here
-    });
-
-d3.json("data/devDataset.json")
-    .then(function(data) {
-        data.forEach(row => {
-            arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
-            devDataset.push(arr);
-        });
-        mapPublisherToDeveloper();
-        updateScaleDomain(publisher, devGen);
-        updateDataset(publisher, devGen);
-        drawLegend1();
-        drawAxes1();
-        updateDrawing1();
-        updatePieValues();
-    })
-    .catch(function(error) {
-        console.log(error); // Some error handling here
-    });
 
