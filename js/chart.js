@@ -31,8 +31,8 @@ function updateScaleDomain(){
         xScale.domain(arr.map(function (d) {return d}));
     }
     else {
-        var mapDevtoRev = publisherToGenre.get(pub);
-        var arr = Array.from(mapDevtoRev.keys())
+        var mapGentoRev = publisherToGenre.get(pub);
+        var arr = Array.from(mapGentoRev.keys())
         xScale.domain(arr.map(function (d) {return d}));
     }
 }
