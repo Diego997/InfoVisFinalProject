@@ -4,7 +4,6 @@ const width = 1350 - margin.left - margin.right - margin.legend;
 const height = 460 - margin.top - margin.bottom - margin.text;
 
 var dataSet = [];
-
 var xScale = d3.scaleBand().rangeRound([2, width]).padding(.1);
 var yScale = d3.scaleLinear().range([height, 0]);
 var legendScale = d3.scaleLinear().range([height, 0]);
@@ -13,8 +12,6 @@ var barColors = d3.scaleLinear().range(["#2c7bb6", "#00a6ca","#00ccbc","#90eb9d"
 var yAxis = d3.axisLeft(yScale).ticks(10);
 var xAxis = d3.axisBottom(xScale)
 var legendAxis = d3.axisRight(legendScale).ticks(10);// Left = ticks on the left
-var publisher = "SEGA";
-var devGen = 0;
 yScale.domain([0, 100])
 barColors.domain([0, 100 / 8, 200 / 8, 300 / 8, 400 / 8, 500 / 8, 600 / 8, 700 / 8, 100]);
 legendScale.domain([0, 100]);
@@ -25,15 +22,14 @@ var svg1 = d3.select("#barchart").append("svg")
     .append("g")                                           // g is a group
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
-function updateScaleDomain(pubb, devGen) {
+function updateScaleDomain() {
     if (devGen==0) {
-        var mapDevtoRev = publisherToDeveloper.get(pubb);
+        var mapDevtoRev = publisherToDeveloper.get(pub);
         var arr = Array.from(mapDevtoRev.keys())
         xScale.domain(arr.map(function (d) {return d}));
     }
     else {
-        var mapDevtoRev = publisherToGenre.get(pubb);
+        var mapDevtoRev = publisherToGenre.get(pub);
         var arr = Array.from(mapDevtoRev.keys())
         xScale.domain(arr.map(function (d) {return d}));
     }
@@ -112,13 +108,13 @@ function drawLegend1(){
         .style("fill", "url(#linear-gradient)")
 }
 
-function updateDataset(pubb, devGen){
+function updateDataset(){
     console.log(publisherToDeveloper)
     if (devGen==0) {
-        dataSet = Array.from(publisherToDeveloper.get(pubb), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
+        dataSet = Array.from(publisherToDeveloper.get(pub), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
     }
     else {
-        dataSet = Array.from(publisherToGenre.get(pubb), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
+        dataSet = Array.from(publisherToGenre.get(pub), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
     }
 }
 
@@ -151,8 +147,11 @@ function updateDrawing1(){
 }
 
 function redraw() {
+    updateScaleDomain();
     updateAxes1();
+    updateDataset();
     updateDrawing1();
+    updatePieValues();
 }
 
 

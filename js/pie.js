@@ -2,7 +2,6 @@ var piewidth = 1300
 var pieheight = 300
 var piemargin = 20
 var radius = Math.min(piewidth, pieheight) / 2 - piemargin
-var pub = "KOEI TECMO GAMES CO."
 var year = "2019"
 var svg = d3.select("#piechart").append("svg")
     .attr("width", piewidth)
@@ -11,7 +10,7 @@ var svg = d3.select("#piechart").append("svg")
     .attr("transform", "translate(" + piewidth / 2 + "," + pieheight / 2 + ")");
 
 var color = d3.scaleOrdinal()
-    .range(["#d7191c","#90eb9d","#800080"])
+    .range(["#d7191c","#90eb9d","cornflowerblue"])
 
 var pie = d3.pie()
     .value(d=>d[1])
@@ -22,24 +21,8 @@ var data = [];
 
 var data_ready;
 
-function updateYear(a){
-    year=a;
-    updatePieValues();
-}
-
-function updatePub(a){
-    pub=a;
-    publisher=a;
-    updateScaleDomain(pub, devGen);
-    updateAxes1();
-    updateDataset(pub, devGen);
-    updateDrawing1();
-    updatePieValues();
-}
-
 function updatePieValues() {
     var sumCount = publisherYearToReviews.get((pub+year))
-
     if (sumCount) {
         percentage = parseInt(sumCount[0]/sumCount[1])
         data=[(100-percentage), percentage]
@@ -73,9 +56,11 @@ function updateEmptyPie() {
         .attr("class", "empty")
         .attr("y", 16)
         .attr("x", -350)
-        .attr("fill", "#90eb9d")
+        .attr("fill", "white")
         .style("font-size", 50)
         .text("No Data")
+
+
 }
 
 function updatePie() {

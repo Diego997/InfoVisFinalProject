@@ -1,3 +1,5 @@
+var pub = "2K";
+var devGen = 0;
 var devDataset = [];
 var genDataset = [];
 var compDataset = [];
@@ -61,11 +63,17 @@ function mapPublisherToGenre() {
 
 function switchDevGen(a){
     devGen=a;
-    updateScaleDomain(pub, devGen);
-    updateAxes1();
-    updateDataset(pub, devGen);
-    updateDrawing1();
+    redraw();
+}
+
+function updateYear(a){
+    year=a;
     updatePieValues();
+}
+
+function updatePub(a){
+    pub=a;
+    redraw();
 }
 
 d3.json("data/genDataset.json")
@@ -99,8 +107,8 @@ d3.json("data/devDataset.json")
             devDataset.push(arr);
         });
         mapPublisherToDeveloper();
-        updateScaleDomain(publisher, devGen);
-        updateDataset(publisher, devGen);
+        updateScaleDomain();
+        updateDataset();
         drawLegend1();
         drawAxes1();
         updateDrawing1();
