@@ -30,9 +30,9 @@ function shadeColor(color) {
     var G = parseInt(color.substring(3,5),16);
     var B = parseInt(color.substring(5,7),16);
 
-    R = parseInt(R * (75) / 100);
-    G = parseInt(G * (75) / 100);
-    B = parseInt(B * (75) / 100);
+    R = parseInt(R * (85) / 100);
+    G = parseInt(G * (85) / 100);
+    B = parseInt(B * (85) / 100);
 
     R = (R<255)?R:255;
     G = (G<255)?G:255;
@@ -145,7 +145,6 @@ const tooltip = d3.select("body")
     .text("a simple tooltip");
 
 function updateDataset(){
-    console.log(publisherToDeveloper)
     if (devGen==0) {
         dataBar = Array.from(publisherToDeveloper.get(pub), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
     }
@@ -155,8 +154,9 @@ function updateDataset(){
 }
 
 function updateDrawing(){
-    console.log(dataBar)
     var bars = svgBar.selectAll(".bar").data(dataBar, function (d) {return d[0]});
+
+    //var yearTooltip = developerToYear.get(pub+)
 
     bars.exit().remove();
 
@@ -169,10 +169,15 @@ function updateDrawing(){
         .attr("fill", function(d) { return barColors(d[1]);})
         .attr("stroke-width", 2)
         .attr("stroke", "white")
-        .on("mouseover", function(d) {
-            tooltip.html(`Year: ${d}`).style("visibility", "visible");
+        .on("mouseover", function() {
+
+            //console.log(this.getAttribute("x"))
+            //console.log(svgBar.select("g.x.axis").call(xAxis).selectAll("text"))
+            console.log(this)
+
+            tooltip.html("SNOOP DOGG <br> SNOOP DOGG ").style("visibility", "visible");
             d3.select(this)
-                .attr("fill", shadeColor(barColors(d[1])));
+                .style("opacity", .5)
         })
         .on("mousemove", function(){
             tooltip
@@ -181,8 +186,10 @@ function updateDrawing(){
         })
         .on("mouseout", function() {
             tooltip.html(``).style("visibility", "hidden");
-            d3.select(this).attr("fill", barColors(d[1]));
+            d3.select(this)
+                .style("opacity", 1)
         });
+
 
 
     bars.transition().duration(updateTime)
@@ -203,6 +210,4 @@ function redraw(){
     updateDrawing();
     updatePieValues();
 }
-
-
 

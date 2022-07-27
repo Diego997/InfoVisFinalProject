@@ -117,9 +117,30 @@ label span:before {
     border: 5px ridge cornflowerblue;
 }
 
-.piechart {
-    height: 200px;
+.svg1 {
+    background-color: black;
+    border-radius: 25px;
+    margin-top: 17px;
+    margin-left: 30px;
+    padding-left: 15px;
+    padding-top: 10px;
+    width: 1350px;
+    border: 5px ridge cornflowerblue;
+    display: grid;
+    grid: 308px / auto auto auto;
+}
+
+.pietext {
+    height: 300px;
     overflow-y: scroll;
+}
+
+.pietextfixed {
+    height: 10px;
+}
+
+.piechart {
+    width: 280px;
 }
 
 .devgen {

@@ -8,6 +8,7 @@ var publisherToDeveloper = new Map();
 var publisherYearToReviews = new Map();
 var publisherToGenre = new Map();
 var publisherYearToGame = new Map();
+var developerToYear = new Map();
 
 //functions
 function mapPublisherToDeveloper() {
@@ -76,6 +77,20 @@ function mapPublisherToGenre() {
     }
 }
 
+function mapDeveloperToYear() {
+    for (elem of devDataset) {
+        var key = elem[3]+elem[2]
+        if (developerToYear.has(key)) {
+            arr = developerToYear.get(key)
+            arr.push([elem[1]])
+            developerToYear.set(key, arr);
+        } else {
+            developerToYear.set(key, [elem[1]]);
+        }
+    }
+    console.log(developerToYear)
+}
+
 function switchDevGen(a){
     devGen=a;
     redraw();
@@ -123,6 +138,8 @@ d3.json("data/devDataset.json")
             devDataset.push(arr);
         });
         mapPublisherToDeveloper();
+        mapDeveloperToYear();
+        mapDeveloperToYear();
         updateScaleDomain();
         updateDataset();
         drawLegend();
