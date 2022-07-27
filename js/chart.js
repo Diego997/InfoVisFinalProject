@@ -24,6 +24,27 @@ var svgBar = d3.select("#barchart").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 //function
+function shadeColor(color) {
+
+    var R = parseInt(color.substring(1,3),16);
+    var G = parseInt(color.substring(3,5),16);
+    var B = parseInt(color.substring(5,7),16);
+
+    R = parseInt(R * (75) / 100);
+    G = parseInt(G * (75) / 100);
+    B = parseInt(B * (75) / 100);
+
+    R = (R<255)?R:255;
+    G = (G<255)?G:255;
+    B = (B<255)?B:255;
+
+    var RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
+    var GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
+    var BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
+
+    return "#"+RR+GG+BB;
+}
+
 function updateScaleDomain(){
     if (devGen==0) {
         var mapDevtoRev = publisherToDeveloper.get(pub);
@@ -110,6 +131,19 @@ function drawLegend(){
         .style("fill", "url(#linear-gradient)")
 }
 
+// create tooltip element
+const tooltip = d3.select("body")
+    .append("div")
+    .attr("class","d3-tooltip")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .style("padding", "15px")
+    .style("background", "rgba(0,0,0,0.6)")
+    .style("border-radius", "5px")
+    .style("color", "#fff")
+    .text("a simple tooltip");
+
 function updateDataset(){
     console.log(publisherToDeveloper)
     if (devGen==0) {
@@ -135,6 +169,20 @@ function updateDrawing(){
         .attr("fill", function(d) { return barColors(d[1]);})
         .attr("stroke-width", 2)
         .attr("stroke", "white")
+        .on("mouseover", function(d) {
+            tooltip.html(`Year: ${d}`).style("visibility", "visible");
+            d3.select(this)
+                .attr("fill", shadeColor(barColors(d[1])));
+        })
+        .on("mousemove", function(){
+            tooltip
+                .style("top", (event.pageY-10)+"px")
+                .style("left",(event.pageX+10)+"px");
+        })
+        .on("mouseout", function() {
+            tooltip.html(``).style("visibility", "hidden");
+            d3.select(this).attr("fill", barColors(d[1]));
+        });
 
 
     bars.transition().duration(updateTime)
