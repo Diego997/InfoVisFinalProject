@@ -1,7 +1,8 @@
 // constants
 const piewidth = 1300
 const pieheight = 300
-const piemargin = 20
+const piemargin = 60
+const textheight = 700
 const radius = Math.min(piewidth, pieheight) / 2 - piemargin
 const updatePieTime = 800
 const color = d3.scaleOrdinal().range(["#d7191c","#90eb9d","cornflowerblue"])
@@ -21,8 +22,14 @@ var svgPie = d3.select("#piechart").append("svg")
     .attr("transform", "translate(" + piewidth / 2 + "," + pieheight / 2 + ")")
 
 var arc = d3.arc()
-    .innerRadius(70)
+    .innerRadius(50)
     .outerRadius(radius)
+
+var svgText = d3.select("#pietext").append("svg")
+    .attr("width", piewidth)
+    .attr("height", textheight)
+    .append("g")
+    .attr("transform", "translate(" + piewidth / 2 + "," + pieheight / 2 + ")")
 
 //functions
 function updatePieValues() {
@@ -44,38 +51,99 @@ function sideTextUpdate() {
 
     svgPie.append("text")
         .attr("class", "sideTest")
-        .attr("y", -50)
+        .attr("y", -120)
         .attr("x", -640)
         .attr("fill", "white")
-        .style("font-size", 35)
+        .style("font-size", 25)
         .text(pub)
 
     svgPie.append("text")
         .attr("class", "sideTest")
-        .attr("y", 0)
+        .attr("y", 130)
         .attr("x", -640)
         .attr("fill", "white")
-        .style("font-size", 35)
-        .text("average positive")
+        .style("font-size", 20)
+        .text("avg postive reviews in " + year)
+}
 
-    svgPie.append("text")
-        .attr("class", "sideTest")
-        .attr("y", 50)
-        .attr("x", -640)
-        .attr("fill", "white")
-        .style("font-size", 35)
-        .text("reviews in " + year)
+function gameTextUpdate() {
+    var games = publisherYearToGame.get((pub+year))
+    y = -80
+
+    svgText.append("text")
+        .attr("class", "gameText")
+        .attr("y", -120)
+        .attr("x", -300)
+        .attr("fill", "cornflowerblue")
+        .style("font-size", 20)
+        .text("Developer")
+
+    svgText.append("text")
+        .attr("class", "gameText")
+        .attr("y", -120)
+        .attr("x", 270)
+        .attr("fill", "cornflowerblue")
+        .style("font-size", 20)
+        .text("Genre")
+
+    svgText.append("text")
+        .attr("class", "gameText")
+        .attr("y", -120)
+        .attr("x", 500)
+        .attr("fill", "cornflowerblue")
+        .style("font-size", 20)
+        .text("Positive Reviews")
+
+
+
+    if (games) {
+        for (g of games) {
+
+            console.log(g)
+            console.log(g[0])
+            console.log(g[1])
+            console.log(g[2])
+
+            svgText.append("text")
+                .attr("class", "gameText")
+                .attr("y", y)
+                .attr("x", -300)
+                .attr("fill", "white")
+                .style("font-size", 20)
+                .text(g[0])
+
+            svgText.append("text")
+                .attr("class", "gameText")
+                .attr("y", y)
+                .attr("x", 270)
+                .attr("fill", "white")
+                .style("font-size", 20)
+                .text(g[1])
+
+            svgText.append("text")
+                .attr("class", "gameText")
+                .attr("y", y)
+                .attr("x", 550)
+                .attr("fill", "white")
+                .style("font-size", 20)
+                .text(g[2] + "%")
+
+            y += 30
+        }
+    }
+
 }
 
 function updatePie() {
 
-
     d3.selectAll(".empty").remove()
     d3.selectAll(".numeroPercentile").remove()
     d3.selectAll(".sideTest").remove()
+    d3.selectAll(".gameText").remove()
     svgPie.selectAll("path").remove()
 
     sideTextUpdate()
+    gameTextUpdate()
 
     svgPie.selectAll('path')
         .data(dataPie)
@@ -85,7 +153,7 @@ function updatePie() {
         .attr('fill', d => color(d.data[pieColor]))
         .attr("stroke-width", 3)
         .attr("stroke", "cornflowerblue")
-        .attr('transform', 'translate(0, 0)')
+        .attr('transform', 'translate(-520, 0)')
         .transition()
         .duration(updatePieTime)
         .attrTween('d', function(d) {
@@ -99,10 +167,9 @@ function updatePie() {
     if (pieColor == 0) {
         var centralText = svgPie.append("text")
             .attr("class", "numeroPercentile")
-            .attr("y", 20)
-            .attr("x", -45)
+            .attr('transform', 'translate(-550, 10)')
             .attr("fill", "#90eb9d")
-            .style("font-size", 50)
+            .style("font-size", 30)
 
         centralText.text(d3.format(".0%")(percentage / 100))
     }
@@ -110,7 +177,7 @@ function updatePie() {
         svgPie.append("text")
             .attr("class", "empty")
             .attr("y", 20)
-            .attr("x", +200)
+            .attr("x", -100)
             .attr("fill", "cornflowerblue")
             .style("font-size", 50)
             .text("No Data")

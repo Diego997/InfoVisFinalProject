@@ -7,6 +7,7 @@ var compDataset = [];
 var publisherToDeveloper = new Map();
 var publisherYearToReviews = new Map();
 var publisherToGenre = new Map();
+var publisherYearToGame = new Map();
 
 //functions
 function mapPublisherToDeveloper() {
@@ -38,6 +39,19 @@ function mapPublisherYearToReviews() {
             publisherYearToReviews.set(key, [sum,count]);
         } else {
             publisherYearToReviews.set(key, [parseInt(elem[0]),1]);
+        }
+    }
+}
+
+function mapPublisherYearToGame() {
+    for (elem of compDataset) {
+        var key = elem[3]+elem[1]
+        if (publisherYearToGame.has(key)) {
+            arr = publisherYearToGame.get(key)
+            arr.push([elem[2], elem[4], parseInt(elem[0])])
+            publisherYearToGame.set(key, arr);
+        } else {
+            publisherYearToGame.set(key, [[elem[2], elem[4], parseInt(elem[0])]]);
         }
     }
 }
@@ -96,6 +110,7 @@ d3.json("data/compDataset.json")
             compDataset.push(arr);
         });
         mapPublisherYearToReviews();
+        mapPublisherYearToGame();
     })
     .catch(function(error) {
         console.log(error); // Some error handling here
