@@ -9,6 +9,19 @@ const barColors = d3.scaleLinear()
     .range(["#2c7bb6", "#00a6ca","#00ccbc","#90eb9d","#ffff8c", "#f9d057","#f29e2e","#e76818","#d7191c"])
     .domain([0, 100 / 8, 200 / 8, 300 / 8, 400 / 8, 500 / 8, 600 / 8, 700 / 8, 100]);
 
+// create tooltip element
+const tooltip = d3.select("body")
+    .append("div")
+    .attr("class","d3-tooltip")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .style("padding", "15px")
+    .style("background", "rgba(0,0,0,0.6)")
+    .style("border-radius", "5px")
+    .style("color", "#fff")
+    .text("a simple tooltip");
+
 // variables
 var dataBar = [];
 var xScale = d3.scaleBand().rangeRound([2, width]).padding(.1);
@@ -24,27 +37,6 @@ var svgBar = d3.select("#barchart").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 //function
-function shadeColor(color) {
-
-    var R = parseInt(color.substring(1,3),16);
-    var G = parseInt(color.substring(3,5),16);
-    var B = parseInt(color.substring(5,7),16);
-
-    R = parseInt(R * (85) / 100);
-    G = parseInt(G * (85) / 100);
-    B = parseInt(B * (85) / 100);
-
-    R = (R<255)?R:255;
-    G = (G<255)?G:255;
-    B = (B<255)?B:255;
-
-    var RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
-    var GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
-    var BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
-
-    return "#"+RR+GG+BB;
-}
-
 function updateScaleDomain(){
     if (devGen==0) {
         var mapDevtoRev = publisherToDeveloper.get(pub);
@@ -89,13 +81,12 @@ function drawAxes(){
         .attr("transform", "translate(" + (width + margin.left) + ",0)")
         .call(legendAxis);
 
-// Y axis label:
     svgBar.append("text")
         .attr("text-anchor", "end")
         .attr("y", -25)
-        .attr("x", margin.left+100)
+        .attr("x", margin.left+210)
         .attr("fill","white")
-        .text("% Positive Reviews")
+        .text("% Positive Reviews 2000 - 2019")
 }
 
 function drawLegend(){
@@ -131,19 +122,6 @@ function drawLegend(){
         .style("fill", "url(#linear-gradient)")
 }
 
-// create tooltip element
-const tooltip = d3.select("body")
-    .append("div")
-    .attr("class","d3-tooltip")
-    .style("position", "absolute")
-    .style("z-index", "10")
-    .style("visibility", "hidden")
-    .style("padding", "15px")
-    .style("background", "rgba(0,0,0,0.6)")
-    .style("border-radius", "5px")
-    .style("color", "#fff")
-    .text("a simple tooltip");
-
 function updateDataset(){
     if (devGen==0) {
         dataBar = Array.from(publisherToDeveloper.get(pub), ([name, value]) => ([name, Math.round(value[0]/value[1])]))
@@ -168,22 +146,19 @@ function updateDrawing(){
         .attr("stroke-width", 2)
         .attr("stroke", "white")
         .on("mouseover", function() {
-
-            var devString = this.__data__[0]
-
+            console.log(this.__data__)
+            var keyString = this.__data__[0]
             var tooltipString = ""
+            var yearList
+            if(devGen)
+                yearList = new Set(genreToYear.get(pub + keyString).sort().reverse())
+            else
+                yearList = new Set(developerToYear.get(pub + keyString).sort().reverse())
 
-            var key = pub + devString
-
-            var yearList = developerToYear.get(key)
-            yearList.sort()
-
-            yearList1 = new Set(yearList)
-            for (elem of yearList1) {
-                tooltipString = tooltipString + elem
-                tooltipString = tooltipString + "<br>";
-            }
-
+            for (elem of yearList) {
+                    tooltipString = tooltipString + elem
+                    tooltipString = tooltipString + "<br>";
+                }
             tooltip.html(tooltipString).style("visibility", "visible");
             d3.select(this)
                 .style("opacity", .5)
@@ -198,8 +173,6 @@ function updateDrawing(){
             d3.select(this)
                 .style("opacity", 1)
         });
-
-
 
     bars.transition().duration(updateTime)
         .attr("class", "bar")

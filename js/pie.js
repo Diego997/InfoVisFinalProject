@@ -2,7 +2,6 @@
 const piewidth = 300
 const pieheight = 300
 const piemargin = 60
-var   textheight = 650
 const textwidth = 1000
 const textfixedheight = 50
 const textfixedwidth = 1000
@@ -11,6 +10,7 @@ const updatePieTime = 800
 const color = d3.scaleOrdinal().range(["#d7191c","#90eb9d","cornflowerblue"])
 
 // variables
+var textheight = 200
 var year = "2019" // starting year
 var pieColor      // starting pieColor
 var percentage
@@ -28,13 +28,15 @@ var arc = d3.arc()
     .innerRadius(50)
     .outerRadius(radius)
 
+// text initialization
 var svgTextFixed = d3.select("#pietextfixed").append("svg")
     .attr("width", textfixedwidth)
     .attr("height", textfixedheight)
-.append("g")
+    .append("g")
     .attr("transform", "translate(" + piewidth / 2 + "," + pieheight / 2 + ")")
 
-var svgText = d3.select("#pietext").append("svg")
+
+var svgText = d3.select("#pietext").append("svg").attr("id","svgText")
     .attr("width", textwidth)
     .attr("height", textheight)
     .append("g")
@@ -56,8 +58,33 @@ function updatePieValues() {
     updatePie()
 }
 
-function sideTextUpdate() {
+function textFixedInitialization() {
+    svgTextFixed.append("text")
+        .attr("class", "gameText")
+        .attr("x", -150)
+        .attr("y", -120)
+        .attr("fill", "cornflowerblue")
+        .style("font-size", 20)
+        .text("Developer(s)")
 
+    svgTextFixed.append("text")
+        .attr("class", "gameText")
+        .attr("y", -120)
+        .attr("x", 460)
+        .attr("fill", "cornflowerblue")
+        .style("font-size", 20)
+        .text("Genre(s)")
+
+    svgTextFixed.append("text")
+        .attr("class", "gameText")
+        .attr("y", -120)
+        .attr("x", 680)
+        .attr("fill", "cornflowerblue")
+        .style("font-size", 20)
+        .text("Positive Reviews")
+}
+
+function sideTextUpdate() {
     svgPie.append("text")
         .attr("class", "sideTest")
         .attr("y", -120)
@@ -71,47 +98,21 @@ function sideTextUpdate() {
         .attr("y", 130)
         .attr("x", -140)
         .attr("fill", "white")
-        .style("font-size", 20)
-        .text("avg positive reviews in " + year)
+        .style("font-size", 23)
+        .text("Positive Reviews in " + year)
 }
 
 function gameTextUpdate() {
     var games = publisherYearToGame.get((pub+year))
+    if (games==undefined)
+        textheight = 200
+    else
+        textheight = games.length * 31
+    document.getElementById("svgText").setAttribute("height",textheight)
     y = -80
-
-    svgTextFixed.append("text")
-        .attr("class", "gameText")
-        .attr("x", -150)
-        .attr("y", -120)
-        .attr("fill", "cornflowerblue")
-        .style("font-size", 20)
-        .text("Developer")
-
-    svgTextFixed.append("text")
-        .attr("class", "gameText")
-        .attr("y", -120)
-        .attr("x", 460)
-        .attr("fill", "cornflowerblue")
-        .style("font-size", 20)
-        .text("Genre")
-
-    svgTextFixed.append("text")
-        .attr("class", "gameText")
-        .attr("y", -120)
-        .attr("x", 680)
-        .attr("fill", "cornflowerblue")
-        .style("font-size", 20)
-        .text("Positive Reviews")
-
-
 
     if (games) {
         for (g of games) {
-
-            console.log(g)
-            console.log(g[0])
-            console.log(g[1])
-            console.log(g[2])
 
             svgText.append("text")
                 .attr("class", "gameText")
@@ -151,6 +152,7 @@ function updatePie() {
     d3.selectAll(".gameText").remove()
     svgPie.selectAll("path").remove()
 
+    textFixedInitialization()
     sideTextUpdate()
     gameTextUpdate()
 

@@ -9,6 +9,7 @@ var publisherYearToReviews = new Map();
 var publisherToGenre = new Map();
 var publisherYearToGame = new Map();
 var developerToYear = new Map();
+var genreToYear = new Map();
 
 //functions
 function mapPublisherToDeveloper() {
@@ -90,6 +91,29 @@ function mapDeveloperToYear() {
     }
 }
 
+function mapGenreToYear(){
+    for (elem of genDataset) {
+        var key = elem[3]+elem[4]
+        if (genreToYear.has(key)) {
+            arr = genreToYear.get(key)
+            arr.push(elem[1])
+            genreToYear.set(key, arr);
+        } else {
+            genreToYear.set(key, [elem[1]]);
+        }
+    }
+    console.log(genreToYear)
+}
+
+function generateMap(){
+    mapPublisherToGenre();
+    mapPublisherYearToReviews();
+    mapPublisherYearToGame();
+    mapPublisherToDeveloper();
+    mapDeveloperToYear();
+    mapGenreToYear();
+}
+
 function switchDevGen(a){
     devGen=a;
     redraw();
@@ -111,7 +135,6 @@ d3.json("data/genDataset.json")
             arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
             genDataset.push(arr);
         });
-        mapPublisherToGenre();
     })
     .catch(function(error) {
         console.log(error); // Some error handling here
@@ -123,8 +146,6 @@ d3.json("data/compDataset.json")
             arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
             compDataset.push(arr);
         });
-        mapPublisherYearToReviews();
-        mapPublisherYearToGame();
     })
     .catch(function(error) {
         console.log(error); // Some error handling here
@@ -136,8 +157,7 @@ d3.json("data/devDataset.json")
             arr = Object.getOwnPropertyNames(row).map(function(e) {return row[e];});
             devDataset.push(arr);
         });
-        mapPublisherToDeveloper();
-        mapDeveloperToYear();
+        generateMap();
         updateScaleDomain();
         updateDataset();
         drawLegend();
