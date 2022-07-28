@@ -156,8 +156,6 @@ function updateDataset(){
 function updateDrawing(){
     var bars = svgBar.selectAll(".bar").data(dataBar, function (d) {return d[0]});
 
-    //var yearTooltip = developerToYear.get(pub+)
-
     bars.exit().remove();
 
     bars.enter().append("rect")
@@ -171,11 +169,22 @@ function updateDrawing(){
         .attr("stroke", "white")
         .on("mouseover", function() {
 
-            //console.log(this.getAttribute("x"))
-            //console.log(svgBar.select("g.x.axis").call(xAxis).selectAll("text"))
-            console.log(this)
+            var devString = this.__data__[0]
 
-            tooltip.html("SNOOP DOGG <br> SNOOP DOGG ").style("visibility", "visible");
+            var tooltipString = ""
+
+            var key = pub + devString
+
+            var yearList = developerToYear.get(key)
+            yearList.sort()
+
+            yearList1 = new Set(yearList)
+            for (elem of yearList1) {
+                tooltipString = tooltipString + elem
+                tooltipString = tooltipString + "<br>";
+            }
+
+            tooltip.html(tooltipString).style("visibility", "visible");
             d3.select(this)
                 .style("opacity", .5)
         })
@@ -210,4 +219,3 @@ function redraw(){
     updateDrawing();
     updatePieValues();
 }
-

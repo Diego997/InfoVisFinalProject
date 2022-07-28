@@ -82,13 +82,12 @@ function mapDeveloperToYear() {
         var key = elem[3]+elem[2]
         if (developerToYear.has(key)) {
             arr = developerToYear.get(key)
-            arr.push([elem[1]])
+            arr.push(elem[1])
             developerToYear.set(key, arr);
         } else {
             developerToYear.set(key, [elem[1]]);
         }
     }
-    console.log(developerToYear)
 }
 
 function switchDevGen(a){
@@ -138,7 +137,6 @@ d3.json("data/devDataset.json")
             devDataset.push(arr);
         });
         mapPublisherToDeveloper();
-        mapDeveloperToYear();
         mapDeveloperToYear();
         updateScaleDomain();
         updateDataset();

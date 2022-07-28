@@ -2,7 +2,7 @@
 const piewidth = 300
 const pieheight = 300
 const piemargin = 60
-const textheight = 650
+var   textheight = 650
 const textwidth = 1000
 const textfixedheight = 50
 const textfixedwidth = 1000
@@ -38,7 +38,7 @@ var svgText = d3.select("#pietext").append("svg")
     .attr("width", textwidth)
     .attr("height", textheight)
     .append("g")
-    .attr("transform", "translate(" + piewidth / 2 + "," + pieheight / 2 + ")")
+    .attr("transform", "translate(" + piewidth / 2 + ",100)")
 
 //functions
 function updatePieValues() {
@@ -72,7 +72,7 @@ function sideTextUpdate() {
         .attr("x", -140)
         .attr("fill", "white")
         .style("font-size", 20)
-        .text("avg postive reviews in " + year)
+        .text("avg positive reviews in " + year)
 }
 
 function gameTextUpdate() {
