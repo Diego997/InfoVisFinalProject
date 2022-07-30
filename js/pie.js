@@ -109,14 +109,14 @@ function gameTextUpdate() {
     else
         textheight = games.length * 31
     document.getElementById("svgText").setAttribute("height",textheight)
-    y = -80
+    yPosition = -80
 
     if (games) {
         for (g of games) {
 
             svgText.append("text")
                 .attr("class", "gameText")
-                .attr("y", y)
+                .attr("y", yPosition)
                 .attr("x", -150)
                 .attr("fill", "white")
                 .style("font-size", 20)
@@ -124,7 +124,7 @@ function gameTextUpdate() {
 
             svgText.append("text")
                 .attr("class", "gameText")
-                .attr("y", y)
+                .attr("y", yPosition)
                 .attr("x", 460)
                 .attr("fill", "white")
                 .style("font-size", 20)
@@ -132,13 +132,13 @@ function gameTextUpdate() {
 
             svgText.append("text")
                 .attr("class", "gameText")
-                .attr("y", y)
+                .attr("y", yPosition)
                 .attr("x", 740)
                 .attr("fill", "white")
                 .style("font-size", 20)
                 .text(g[2] + "%")
 
-            y += 30
+            yPosition += 30
         }
     }
 

@@ -8,6 +8,10 @@ const legendScale = d3.scaleLinear().range([height, 0]).domain([0, 100]);
 const barColors = d3.scaleLinear()
     .range(["#2c7bb6", "#00a6ca","#00ccbc","#90eb9d","#ffff8c", "#f9d057","#f29e2e","#e76818","#d7191c"])
     .domain([0, 100 / 8, 200 / 8, 300 / 8, 400 / 8, 500 / 8, 600 / 8, 700 / 8, 100]);
+/*
+const yScaleLine = d3.scaleLinear().range([height, 0]).domain([0, 100]);
+const xScaleLine = d3.scaleBand().rangeRound([2, width]).padding(.1).domain(arr.map(function (d) {return d}));
+*/
 
 // create tooltip element
 const tooltip = d3.select("body")
@@ -30,7 +34,7 @@ var xAxis = d3.axisBottom(xScale)
 var legendAxis = d3.axisRight(legendScale).ticks(10);// Left = ticks on the left
 
 // barchart initialization
-var svgBar = d3.select("#barchart").append("svg")
+var svgBar = d3.select("#barchart").append("svg").attr("id","svgBar")
     .attr("width", width + margin.left + margin.right + margin.legend)     // i.e., 800 again
     .attr("height", height + margin.top + margin.bottom + margin.text)// i.e., 300 again
     .append("g")                                           // g is a group
@@ -146,7 +150,6 @@ function updateDrawing(){
         .attr("stroke-width", 2)
         .attr("stroke", "white")
         .on("mouseover", function() {
-            console.log(this.__data__)
             var keyString = this.__data__[0]
             var tooltipString = ""
             var yearList
@@ -192,3 +195,4 @@ function redraw(){
     updateDrawing();
     updatePieValues();
 }
+

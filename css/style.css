@@ -130,6 +130,16 @@ label span:before {
     grid: 308px / auto auto auto;
 }
 
+.svg2 {
+    background-color: black;
+    border-radius: 25px;
+    margin-top: 17px;
+    margin-left: 30px;
+    padding-left: 15px;
+    padding-top: 10px;
+    border: 5px ridge cornflowerblue;
+}
+
 .pietext {
     height: 230px;
     overflow-y: scroll;
