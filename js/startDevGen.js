@@ -4,7 +4,6 @@ var devGen = 0;
 var devDataset = [];
 var genDataset = [];
 var compDataset = [];
-var dataLine = [];
 var publisherToDeveloper = new Map();
 var publisherYearToReviews = new Map();
 var publisherToGenre = new Map();
@@ -130,25 +129,6 @@ function updatePub(a){
     redraw();
 }
 
-function createDataLine(){
-    for(publ of publisherToGenre.keys()){
-        var yearReviews=[];
-        var year = "2000";
-        while(parseInt(year)<2020){
-            val=publisherYearToReviews.get(publ+year)
-            if(val!==undefined){
-                var couple = val
-                avg = couple[0]/couple[1]
-                yearReviews.push([year, Math.round(avg)])
-            }
-            num=parseInt(year)+1
-            year=num.toString();
-        }
-        dataLine.push([publ,yearReviews])
-    }
-    console.log(dataLine);
-}
-
 d3.json("data/genDataset.json")
     .then(function(data) {
         data.forEach(row => {
@@ -178,14 +158,12 @@ d3.json("data/devDataset.json")
             devDataset.push(arr);
         });
         generateMap();
-        createDataLine();
         updateScaleDomain();
         updateDataset();
         drawLegend();
         drawAxes();
         updateDrawing();
         updatePieValues();
-        drawLine();
     })
     .catch(function(error) {
         console.log(error); // Some error handling here

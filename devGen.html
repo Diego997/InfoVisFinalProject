@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bivariate Bar Chart</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="lib/d3.v6.min.js"></script>
+</head>
+<body>
+<div class="home">
+    <form class="l">
+        <label class="l">
+            <div onclick="window.location = 'index.html';">
+                <input  type="radio" value="3" name="radio"/>
+                <span class="dev">Home</span>
+            </div>
+        </label>
+    </form>
+</div>
+<div class="devgen" id="devgen">
+    <form class="l">
+        <label class="l">
+            <input onclick="switchDevGen(0)" type="radio" value="3" name="radio" checked/>
+            <span class="dev">Developer</span>
+        </label>
+        <label class="l">
+            <input onclick="switchDevGen(1)" type="radio" value="3" name="radio" />
+            <span class="dev">Genre</span>
+        </label>
+    </form>
+</div>
+<div class="svg" >
+    <div id="barchart"></div>
+</div>
+<div class="svg1" >
+    <div id="piechart" class="piechart"></div>
+    <div>
+        <div id="pietextfixed" class="pietextfixed"></div>
+        <div id="pietext" class="pietext"></div>
+    </div>
+</div>
+<div class="containerPub">
+    <center><h2>PUBLISHER</h2></center>
+    <div class="container1">
+        <form>
+            <div class="column1">
+                <label>
+                    <input onclick="updatePub('2K')" type="radio" name="radio" checked/>
+                    <span>2K</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('Activision')" type="radio" name="radio"/>
+                    <span>Activision</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('BANDAI NAMCO')" type="radio" name="radio"/>
+                    <span>BANDAI NAMCO</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('Big Fish Games')" type="radio" name="radio"/>
+                    <span>Big Fish Games</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('Choice of Games')" type="radio" name="radio"/>
+                    <span>Choice of Games</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('Degica')" type="radio" name="radio"/>
+                    <span>Degica</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('Dovetail Games - Flight')" type="radio" name="radio"/>
+                    <span>Dovetail Games - Flight</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('Dovetail Games - Trains')" type="radio" name="radio"/>
+                    <span>Dovetail Games - Trains</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('KOEI TECMO GAMES')" type="radio" name="radio" />
+                    <span>KOEI TECMO GAMES</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('Paradox Interactive')" type="radio" name="radio"/>
+                    <span>Paradox Interactive</span>
+                </label>
+            </div>
+            <div class="column2">
+                <label>
+                    <input onclick="updatePub('SEGA')" type="radio" name="radio"/>
+                    <span>SEGA</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('Slitherine Ltd.')" type="radio" name="radio"/>
+                    <span>Slitherine Ltd.</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('THQ Nordic')" type="radio" name="radio"/>
+                    <span>THQ Nordic</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('Ubisoft')" type="radio" name="radio"/>
+                    <span>Ubisoft</span>
+                </label>
+                <label>
+                    <input onclick="updatePub('XSEED Games')" type="radio" name="radio"/>
+                    <span>XSEED Games</span>
+                </label>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="containerYear">
+    <center><h2>YEAR</h2></center>
+    <div class="container2" id="year">
+        <form>
+            <div>
+                <label>
+                    <input onclick="updateYear('2019')" type="radio" value="2019" name="radio" checked/>
+                    <span>2019</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2018')" type="radio" value="3" name="radio"/>
+                    <span>2018</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2017')" type="radio" value="3" name="radio"/>
+                    <span>2017</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2016')" type="radio" value="3" name="radio"/>
+                    <span>2016</span>
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input onclick="updateYear('2015')" type="radio" value="3" name="radio"/>
+                    <span>2015</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2014')" type="radio" value="3" name="radio"/>
+                    <span>2014</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2013')" type="radio" value="3" name="radio"/>
+                    <span>2013</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2012')" type="radio" value="3" name="radio"/>
+                    <span>2012</span>
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input onclick="updateYear('2011')" type="radio" value="3" name="radio"/>
+                    <span>2011</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2010')" type="radio" value="3" name="radio"/>
+                    <span>2010</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2009')" type="radio" value="3" name="radio"/>
+                    <span>2009</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2008')" type="radio" value="3" name="radio"/>
+                    <span>2008</span>
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input onclick="updateYear('2007')" type="radio" value="3" name="radio"/>
+                    <span>2007</span>
+                </label>
+
+                <label>
+                    <input onclick="updateYear('2006')" type="radio" value="3" name="radio"/>
+                    <span>2006</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2005')" type="radio" value="3" name="radio"/>
+                    <span>2005</span>
+                </label>
+
+                <label>
+                    <input onclick="updateYear('2004')" type="radio" value="3" name="radio"/>
+                    <span>2004</span>
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input onclick="updateYear('2003')" type="radio" value="3" name="radio"/>
+                    <span>2003</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2002')" type="radio" value="3" name="radio"/>
+                    <span>2002</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2001')" type="radio" value="3" name="radio"/>
+                    <span>2001</span>
+                </label>
+                <label>
+                    <input onclick="updateYear('2000')" type="radio" value="3" name="radio"/>
+                    <span>2000</span>
+                </label>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="js/startDevGen.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/pie.js"></script>
+</body>
+</html>

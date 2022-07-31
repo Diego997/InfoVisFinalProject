@@ -15,7 +15,6 @@ var svgLine = d3.select("#linechart").append("svg")
 const x = d3.scaleBand().rangeRound([2, widthLine-marginLine.legend]).padding(1)
     .domain([2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019]);
 
-
 // Add Y axis
 const y = d3.scaleLinear()
     .domain([20,100])
@@ -30,24 +29,42 @@ svgLine.append("g")
     .attr("fill","white")
     .call(d3.axisLeft(y));
 
+svgLine.append("text")
+    .attr("text-anchor", "end")
+    .attr("y", -25)
+    .attr("x", marginLine.left + 130)
+    .attr("fill","white")
+    .text("% Positive Reviews")
+
+svgLine.append("text")
+    .attr("text-anchor", "end")
+    .attr("y", heightLine+20)
+    .attr("x", widthLine-40)
+    .attr("fill","white")
+    .text("Years")
+
 var sizeRect = 20
 
 function drawLine() {
     const line = d3.line()
         .x(d => x(+d[0]))
         .y(d => y(+d[1]))
+
     svgLine.selectAll("myLines")
         .data(dataLine)
         .join("path")
+        .attr("id", d => d[0] + "-line")
         .attr("d", d => line(d[1]))
         .attr("stroke", d => myColor(d[0]))
         .style("stroke-width", 2)
         .style("fill", "none")
-    svgLine
-        // First we need to enter in a group
-        .selectAll("myDots")
+        .style("opacity", d => d[0] =="Paradox Interactive" ? 1:0)
+
+    svgLine.selectAll("myDots")
         .data(dataLine)
         .join('g')
+        .attr("id", d => d[0] + "-dot")
+        .style("opacity", d => d[0] =="Paradox Interactive" ? 1:0)
         .style("fill", d => myColor(d[0]))
         // Second we need to enter in the 'values' part of this group
         .selectAll("myPoints")
@@ -58,48 +75,57 @@ function drawLine() {
         .attr("r", 2)
         .attr("stroke", "white")
 
-   /* // Add a legend at the end of each line
-    svgLine
-        .selectAll("myLabels")
-        .data(dataLine)
-        .join('g')
-        .append("text")
-        .datum(d => { return [d[0],  d[1][d[1].length - 1]]; }) // keep only the last value of each time series
-        .attr("transform",d => `translate(${x(d[1][0])},${y(d[1][1])})`) // Put the text at the position of the last point
-        .attr("x", 12) // shift the text a bit more right
-        .text(d => d[0])
-        .style("fill", d => myColor(d[0]))
-        .style("font-size", 15)
-*/
-    var pubKeys = dataLine.map(function (d){return d[0]} ).sort()
     svgLine.selectAll("myrects")
         .data(dataLine)
         .enter()
         .append("rect")
+        .attr("id", d => d[0] + "-rect")
         .attr("x", 1550)
-        .attr("y", function(d,i){ return 0 + i*(sizeRect+25)}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("y", function(d,i){ return i*(sizeRect+24)})
         .attr("width", sizeRect)
         .attr("height", sizeRect)
         .style("fill", function(d){ return myColor(d[0])})
+        .style("fill-opacity", d => d[0] =="Paradox Interactive" ? 1:0)
+        .style("stroke", function(d){ return myColor(d[0])})
+        .on("click", function(d){
+            var currentLine = document.getElementById(this.__data__[0] + "-line")
+            var currentDots = document.getElementById(this.__data__[0] + "-dot")
+            var currentRect = document.getElementById(this.__data__[0] + "-rect")
+            console.log(d)
+            // is the element currently visible ?
+            var currentLineOpacity = currentLine.style.opacity
+            var currentDotsOpacity = currentDots.style.opacity
+            var currentRectFillOpacity = currentRect.style.fillOpacity
+            // Change the opacity: from 0 to 1 or from 1 to 0
+            d3.select(currentLine).transition().style("opacity", currentLineOpacity == 1 ? 0:1)
+            d3.select(currentDots).transition().style("opacity", currentDotsOpacity == 1 ? 0:1)
+            d3.select(currentRect).transition().style("fill-opacity", currentRectFillOpacity == 1 ? 0:1)
+        })
 
-// Add one dot in the legend for each name.
     svgLine.selectAll("mylabels")
-        .data(pubKeys)
+        .data(dataLine)
         .enter()
+        .append("g")
         .append("text")
         .attr("x", 1550 + sizeRect*1.2)
-        .attr("y", function(d,i){ return 0 + i*(sizeRect+25) + (sizeRect/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("y", function(d,i){ return i*(sizeRect+24) + (sizeRect/2)})
         .style("fill", function(d){ return myColor(d[0])})
         .text(function(d){ return d[0]})
         .attr("text-anchor", "left")
         .style("font-size", 18)
         .style("alignment-baseline", "middle")
-        .on("click", function(event,d){
+        .on("click", function(d){
+            var currentLine = document.getElementById(this.__data__[0] + "-line")
+            var currentDots = document.getElementById(this.__data__[0] + "-dot")
+            var currentRect = document.getElementById(this.__data__[0] + "-rect")
+            console.log(d)
             // is the element currently visible ?
-            currentOpacity = d3.selectAll("." + d[0]).style("opacity")
+            var currentLineOpacity = currentLine.style.opacity
+            var currentDotsOpacity = currentDots.style.opacity
+            var currentRectFillOpacity = currentRect.style.fillOpacity
             // Change the opacity: from 0 to 1 or from 1 to 0
-            d3.selectAll("." + d[0]).transition().style("opacity", currentOpacity == 1 ? 0:1)
-
+            d3.select(currentLine).transition().style("opacity", currentLineOpacity == 1 ? 0:1)
+            d3.select(currentDots).transition().style("opacity", currentDotsOpacity == 1 ? 0:1)
+            d3.select(currentRect).transition().style("fill-opacity", currentRectFillOpacity == 1 ? 0:1)
         })
 }
-
