@@ -129,6 +129,15 @@ function updatePub(a){
     redraw();
 }
 
+function startUp(){
+    updateScaleDomain();
+    updateDataset();
+    drawLegend();
+    drawAxes();
+    updateDrawing();
+    updatePieValues();
+}
+
 d3.json("data/genDataset.json")
     .then(function(data) {
         data.forEach(row => {
@@ -158,12 +167,7 @@ d3.json("data/devDataset.json")
             devDataset.push(arr);
         });
         generateMap();
-        updateScaleDomain();
-        updateDataset();
-        drawLegend();
-        drawAxes();
-        updateDrawing();
-        updatePieValues();
+        setTimeout(startUp,20);
     })
     .catch(function(error) {
         console.log(error); // Some error handling here
